@@ -102,6 +102,9 @@ can_mob_t mob_rx_dash_data = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
+////////////////
+//RX mailboxes for TPS data
+///////////////
 can_msg_t msg_rx_trq_sens0  = {
 	{
 		{
@@ -138,7 +141,7 @@ can_mob_t mob_rx_trq_sens1 = {
 
 
 
-//
+
 can_msg_t msg_ecu_temp_and_maxTrq  = {
 	{
 		{
@@ -208,39 +211,23 @@ can_mob_t mob_tx_bms  = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-can_msg_t msg_rx_bms_precharge  = {
+can_msg_t msg_rx_bms  = {
 	{
 		{
-			.id			= 0x429,
-			.id_mask	= 0x7FF,
+			.id			= CANR_FCN_CMD_ID | CANR_GRP_BMS_ID,
+			.id_mask	= 0xFF0,
 		},
 	},
 	.data.u64 = 0x0LL,
 };
-can_mob_t mob_rx_bms_precharge  = {
+can_mob_t mob_rx_bms  = {
 	CAN_MOB_NOT_ALLOCATED,
-	&msg_rx_bms_precharge,
+	&msg_rx_bms,
 	8,
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-can_msg_t msg_rx_bms_battvolt  = {
-	{
-		{
-			.id			= 0x42A,
-			.id_mask	= 0x7F8, //Get battvolt and battcurr message +++++++
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_rx_bms_battvolt  = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_rx_bms_battvolt,
-	8,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
 
 can_msg_t msg_rx_bspd  = {
 	{

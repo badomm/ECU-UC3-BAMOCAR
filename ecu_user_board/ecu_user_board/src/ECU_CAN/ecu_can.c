@@ -63,10 +63,9 @@ void ecu_can_init(void) {
 	mob_rx_trq_sens0.handle		= 6;
 	mob_rx_trq_sens1.handle     = 7;
 	mob_ecu_temp_and_maxTrq.handle	= 8;
-	mob_rx_bms_precharge.handle	= 9;
+	mob_rx_bms.handle	= 9;
 	mob_brk.handle				= 10;
 	mob_ecu_inverter_status.handle	= 11;
-	mob_rx_bms_battvolt.handle  = 12;
 	mob_rx_bspd.handle			= 13;
 	mob_rx_dash_data.handle		= 14;
 
@@ -131,17 +130,12 @@ void ecu_can_init(void) {
 	
 	can_rx(
 		CAN_BUS_1
-		, mob_rx_bms_precharge.handle
-		, mob_rx_bms_precharge.req_type
-		, mob_rx_bms_precharge.can_msg
+		, mob_rx_bms.handle
+		, mob_rx_bms.req_type
+		, mob_rx_bms.can_msg
 	);
 	
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_bms_battvolt.handle
-		, mob_rx_bms_battvolt.req_type
-		, mob_rx_bms_battvolt.can_msg
-	);
+
 	
 	can_rx(
 		CAN_BUS_1
@@ -297,42 +291,24 @@ void can_out_callback_channel1(U8 handle, U8 event){
 		mob_rx_trq_sens1.req_type,
 		mob_rx_trq_sens1.can_msg);
 	
-	} else if (handle == mob_rx_bms_precharge.handle) {
-		mob_rx_bms_precharge.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_bms_precharge.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_bms_precharge.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_bms_precharge.status				= event;
+	} else if (handle == mob_rx_bms.handle) {
+		mob_rx_bms.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
+		mob_rx_bms.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
+		mob_rx_bms.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
+		mob_rx_bms.status				= event;
 		
 		bms_can_msg_t bms_can_msg;
-		bms_can_msg.data.u64 = mob_rx_bms_precharge.can_msg->data.u64;
-		bms_can_msg.id = mob_rx_bms_precharge.can_msg->id;
+		bms_can_msg.data.u64 = mob_rx_bms.can_msg->data.u64;
+		bms_can_msg.id = mob_rx_bms.can_msg->id;
 		xQueueSendToBackFromISR(queue_bms_rx, &bms_can_msg, NULL);
 		/* Empty message field */
-		mob_rx_bms_precharge.can_msg->data.u64 = 0x0LL;
+		mob_rx_bms.can_msg->data.u64 = 0x0LL;
 		/* Prepare message reception */
 		can_rx(CAN_BUS_1,
-		mob_rx_bms_precharge.handle,
-		mob_rx_bms_precharge.req_type,
-		mob_rx_bms_precharge.can_msg);
+		mob_rx_bms.handle,
+		mob_rx_bms.req_type,
+		mob_rx_bms.can_msg);
 		
-	} else if (handle == mob_rx_bms_battvolt.handle) {
-		mob_rx_bms_battvolt.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_bms_battvolt.can_msg->id			= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_bms_battvolt.dlc					= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_bms_battvolt.status				= event;
-		
-		bms_can_msg_t bms_can_msg;
-		bms_can_msg.data.u64 = mob_rx_bms_battvolt.can_msg->data.u64;
-		bms_can_msg.id = mob_rx_bms_battvolt.can_msg->id;
-		
-		xQueueSendToBackFromISR(queue_bms_rx, &bms_can_msg, NULL);
-		/* Empty message field */
-		mob_rx_bms_battvolt.can_msg->data.u64 = 0x0LL;
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1,
-		mob_rx_bms_battvolt.handle,
-		mob_rx_bms_battvolt.req_type,
-		mob_rx_bms_battvolt.can_msg);	
 	} else if (handle == mob_brk.handle) {
 		mob_brk.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
 		mob_brk.can_msg->id			= can_get_mob_id(CAN_BUS_1, handle);
