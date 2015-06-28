@@ -17,6 +17,9 @@
 #include "ecu_can_messages.h"
 
 
+////////////////////////////
+// Inverter Messages
+///////////////////////////
 void ecu_can_send_to_inverter(uint8_t inverter_reg, uint16_t data) {
 	inverter_can_msg_t message;
 	
@@ -24,6 +27,14 @@ void ecu_can_send_to_inverter(uint8_t inverter_reg, uint16_t data) {
 	message.dlc = INVERTER_DLC_3;
 	message.data.u32[0] = inverter_reg << 24 | data << 8;
 	xQueueSendToBack(queue_to_inverter,&message,0);
+}
+
+void ecu_can_inverter_enable_drive() {
+	ecu_can_send_to_inverter(MODE_REG, 0x0000);
+}
+
+void ecu_can_inverter_disable_drive() {
+	ecu_can_send_to_inverter(MODE_REG, 0x0400);
 }
 
 void ecu_can_inverter_torque_cmd(int16_t torque) {
@@ -56,15 +67,9 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 }
 
 
-
-void ecu_can_inverter_enable_drive() {
-	ecu_can_send_to_inverter(MODE_REG, 0x0000);
-}
-
-void ecu_can_inverter_disable_drive() {
-	ecu_can_send_to_inverter(MODE_REG, 0x0400);
-}
-
+//////////////////////////////////
+//Dash messages
+////////////////////////////////
 void ecu_can_send_current_bms(uint16_t current) { //In use?
 	// Current in [A] but BMS has unit 100[mA]
 	mob_tx_bms.can_msg->data.u64	= 0x0LL;
