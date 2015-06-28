@@ -71,7 +71,6 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 //Dash messages
 ////////////////////////////////
 
-
 void ecu_can_send_fast_data(uint16_t inverter_vdc, uint16_t ecu_error, uint16_t rpm, int16_t trq_cmd) {
 	mob_ecu_fast_data.can_msg->data.u64	  = 0x0LL;
 	mob_ecu_fast_data.can_msg->data.u16[0] = inverter_vdc;
@@ -98,7 +97,6 @@ void ecu_can_send_slow_data(uint16_t motor_temp, uint16_t inverter_temp, uint8_t
 	CAN_DATA_FRAME,
 	mob_ecu_slow_data.can_msg);
 }
-
 
 void ecu_can_send_tractive_system_active(void) {
 	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
