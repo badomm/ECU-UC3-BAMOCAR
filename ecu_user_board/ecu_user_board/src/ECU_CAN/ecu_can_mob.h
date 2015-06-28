@@ -44,7 +44,7 @@ extern can_mob_t mob_rx_bspd;
 extern can_msg_t msg_brk;
 extern can_mob_t mob_brk;
 extern can_msg_t msg_slip_current;
-extern can_mob_t mob_slip_current;
+
 
 
 

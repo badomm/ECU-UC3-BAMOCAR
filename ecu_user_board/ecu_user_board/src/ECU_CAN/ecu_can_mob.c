@@ -316,10 +316,3 @@ can_msg_t msg_slip_current  = {
 	},
 	.data.u64 = 0x0LL,
 };
-can_mob_t mob_slip_current  = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_slip_current,
-	4,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
