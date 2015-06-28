@@ -70,17 +70,7 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 //////////////////////////////////
 //Dash messages
 ////////////////////////////////
-void ecu_can_send_current_bms(uint16_t current) { //In use?
-	// Current in [A] but BMS has unit 100[mA]
-	mob_tx_bms.can_msg->data.u64	= 0x0LL;
-	mob_tx_bms.can_msg->data.u16[0]	= current*10;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_bms.handle,
-	mob_tx_bms.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_bms.can_msg);
-}
+
 
 void ecu_can_send_fast_data(uint16_t inverter_vdc, uint16_t ecu_error, uint16_t rpm, int16_t trq_cmd) {
 	mob_ecu_fast_data.can_msg->data.u64	  = 0x0LL;
