@@ -28,7 +28,7 @@ void ecu_can_send_slow_data(uint16_t motor_temp, uint16_t inverter_temp, uint8_t
 void ecu_can_send_fast_data(uint16_t inverter_vdc, uint16_t ecu_error, uint16_t rpm, int16_t trq_cmd);
 void ecu_can_send_ready_to_drive(void);
 void ecu_can_send_play_rtds(void);
-void ecu_can_send_alive(uint8_t error);
+void ecu_can_send_alive();
 void ecu_can_send_drive_disabled(void);
 void ecu_can_confirm_activate_launch(void);
 void ecu_can_send_launch_ready(void);

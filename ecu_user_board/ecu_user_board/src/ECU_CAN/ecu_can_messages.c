@@ -11,7 +11,7 @@
 #include "queue.h"
 #include "INVERTER_defines.h"
 #include "queue_handles.h"
-#include "revolve_can_definitions.h"
+#include "src/can-definitions/revolve_can_definitions.h"
 #include "ecu_can.h"
 #include "ecu_can_mob.h"
 #include "ecu_can_messages.h"
@@ -166,24 +166,11 @@ void ecu_can_send_drive_disabled(void) {
 	mob_tx_dash.can_msg);
 }
 
-void ecu_can_send_alive(uint8_t error) {
-	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
-	mob_tx_dash.can_msg->data.u8[0]  = CANR_CMD_ALIVE;
-	mob_tx_dash.can_msg->data.u8[1]  = DASH_ALIVE_ECU;
-	if (error == 0) {
-		mob_tx_dash.can_msg->data.u8[2]  = CANR_ALIVE_STATE_OPERATIVE;
-		} else {
-		mob_tx_dash.can_msg->data.u8[2]  = CANR_ALIVE_STATE_ERROR;
-	}
-	
+void ecu_can_send_alive() {
+	mob_tx_dash.can_msg->data.u8[0]  = ALIVE_ECU;	
 	mob_tx_dash.can_msg->id = CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID;
-	mob_tx_dash.dlc = 3;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
+	mob_tx_dash.dlc = 1;
+	can_tx(CAN_BUS_0, mob_tx_dash.handle, mob_tx_dash.dlc, CAN_DATA_FRAME,mob_tx_dash.can_msg);
 }
 
 void ecu_can_confirm_activate_launch(void) {
