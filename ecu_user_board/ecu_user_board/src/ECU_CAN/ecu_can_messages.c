@@ -73,27 +73,27 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 
 //Send inverter and ecu status
 void ecu_can_send_inverter_status(uint16_t inverter_vdc, uint16_t ecu_error, uint16_t rpm, int16_t trq_cmd) {
-	mob_ecu_fast_data.can_msg->data.u64	  = 0x0LL;
-	mob_ecu_fast_data.can_msg->data.u16[0] = inverter_vdc;
-	mob_ecu_fast_data.can_msg->data.u16[1] = ecu_error;
-	mob_ecu_fast_data.can_msg->data.u16[2] = rpm;
-	mob_ecu_fast_data.can_msg->data.s16[3] = trq_cmd;
+	mob_ecu_inverter_status.can_msg->data.u64	  = 0x0LL;
+	mob_ecu_inverter_status.can_msg->data.u16[0] = inverter_vdc;
+	mob_ecu_inverter_status.can_msg->data.u16[1] = ecu_error;
+	mob_ecu_inverter_status.can_msg->data.u16[2] = rpm;
+	mob_ecu_inverter_status.can_msg->data.s16[3] = trq_cmd;
 	
-	can_tx(CAN_BUS_0, mob_ecu_fast_data.handle, mob_ecu_fast_data.dlc, CAN_DATA_FRAME, mob_ecu_fast_data.can_msg);
+	can_tx(CAN_BUS_0, mob_ecu_inverter_status.handle, mob_ecu_inverter_status.dlc, CAN_DATA_FRAME, mob_ecu_inverter_status.can_msg);
 }
 
 //Send temperature and max torque status
 void ecu_can_send_temp_and_maxTrq(uint16_t motor_temp, uint16_t inverter_temp, uint8_t max_trq) {
-	mob_ecu_slow_data.can_msg->data.u64	 = 0x0LL;
-	mob_ecu_slow_data.can_msg->data.u16[0] = motor_temp;
-	mob_ecu_slow_data.can_msg->data.u16[1] = inverter_temp;
-	mob_ecu_slow_data.can_msg->data.u8[4] = max_trq;
+	mob_ecu_temp_and_maxTrq.can_msg->data.u64	 = 0x0LL;
+	mob_ecu_temp_and_maxTrq.can_msg->data.u16[0] = motor_temp;
+	mob_ecu_temp_and_maxTrq.can_msg->data.u16[1] = inverter_temp;
+	mob_ecu_temp_and_maxTrq.can_msg->data.u8[4] = max_trq;
 	
 	can_tx(CAN_BUS_1,
-	mob_ecu_slow_data.handle,
-	mob_ecu_slow_data.dlc,
+	mob_ecu_temp_and_maxTrq.handle,
+	mob_ecu_temp_and_maxTrq.dlc,
 	CAN_DATA_FRAME,
-	mob_ecu_slow_data.can_msg);
+	mob_ecu_temp_and_maxTrq.can_msg);
 }
 
 void ecu_can_send_tractive_system_active(void) {

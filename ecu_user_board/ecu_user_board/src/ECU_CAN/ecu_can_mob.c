@@ -170,7 +170,7 @@ can_mob_t mob_debug  = {
 };
 
 //
-can_msg_t msg_ecu_slow_data  = {
+can_msg_t msg_ecu_temp_and_maxTrq  = {
 	{
 		{
 			.id			= CANR_FCN_DATA_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID1_ID,
@@ -179,15 +179,15 @@ can_msg_t msg_ecu_slow_data  = {
 	},
 	.data.u64 = 0x0LL,
 };
-can_mob_t mob_ecu_slow_data  = {
+can_mob_t mob_ecu_temp_and_maxTrq  = {
 	CAN_MOB_NOT_ALLOCATED,
-	&msg_ecu_slow_data,
+	&msg_ecu_temp_and_maxTrq,
 	5,
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-can_msg_t msg_ecu_fast_data  = {
+can_msg_t msg_ecu_inverter_status  = {
 	{
 		{
 			.id			= CANR_FCN_DATA_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID,
@@ -196,9 +196,9 @@ can_msg_t msg_ecu_fast_data  = {
 	},
 	.data.u64 = 0x0LL,
 };
-can_mob_t mob_ecu_fast_data = {
+can_mob_t mob_ecu_inverter_status = {
 	CAN_MOB_NOT_ALLOCATED,
-	&msg_ecu_fast_data,
+	&msg_ecu_inverter_status,
 	8,
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,

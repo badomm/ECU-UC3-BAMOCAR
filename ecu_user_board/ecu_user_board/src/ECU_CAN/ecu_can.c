@@ -63,10 +63,10 @@ void ecu_can_init(void) {
 	mob_tx_dash.handle			= 5;
 	mob_rx_trq_sens0.handle		= 6;
 	mob_rx_trq_sens1.handle     = 7;
-	mob_ecu_slow_data.handle	= 8;
+	mob_ecu_temp_and_maxTrq.handle	= 8;
 	mob_rx_bms_precharge.handle	= 9;
 	mob_brk.handle				= 10;
-	mob_ecu_fast_data.handle	= 11;
+	mob_ecu_inverter_status.handle	= 11;
 	mob_rx_bms_battvolt.handle  = 12;
 	mob_rx_bspd.handle			= 13;
 	mob_rx_dash_data.handle		= 14;
