@@ -119,7 +119,7 @@ can_mob_t mob_rx_dash_pri = {
 can_msg_t msg_rx_trq_sens0  = {
 	{
 		{
-			.id			= CANR_FCN_PRI_ID | CANR_GRP_SENS_TRQ_ID | CANR_MODULE_ID0_ID,
+			.id			= CANR_FCN_PRI_ID | CANR_GRP_SENS_ROTARY_ID | CANR_MODULE_ID0_ID,
 			.id_mask	= 0x7F8,
 		},
 	},
@@ -136,7 +136,7 @@ can_mob_t mob_rx_trq_sens0 = {
 can_msg_t msg_rx_trq_sens1  = {
 	{
 		{
-			.id			= CANR_FCN_PRI_ID | CANR_GRP_SENS_TRQ_ID | CANR_MODULE_ID1_ID,
+			.id			= CANR_FCN_PRI_ID | CANR_GRP_SENS_ROTARY_ID | CANR_MODULE_ID1_ID,
 			.id_mask	= 0x7F8,
 		},
 	},
