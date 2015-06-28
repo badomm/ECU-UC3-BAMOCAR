@@ -29,8 +29,4 @@ void ecu_can_send_launch_stop(void);
 void ecu_can_send_slip_current(int16_t val1, int16_t val2);
 void ecu_can_inverter_read_torque_periodic(void);
 
-
-void fake_bms_can(void);
-
-
 #endif /* ECU_CAN_MESSAGES_H_ */

@@ -237,17 +237,3 @@ void ecu_can_send_slip_current(int16_t val1, int16_t val2) {
 	CAN_DATA_FRAME,
 	mob_slip_current.can_msg);
 }
-
-void fake_bms_can(void) {
-	mob_slip_current.can_msg->data.u64	 = 0x0LL;
-	mob_slip_current.can_msg->data.u8[3] = 1 << 3;//Set precharge
-		
-	mob_slip_current.can_msg->id = 0x429;
-	mob_slip_current.dlc = 4;
-		
-	can_tx(CAN_BUS_1,
-	mob_slip_current.handle,
-	mob_slip_current.dlc,
-	CAN_DATA_FRAME,
-	mob_slip_current.can_msg);
-}
