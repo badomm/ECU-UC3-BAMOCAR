@@ -56,33 +56,6 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 }
 
 
-void ecu_can_blast(uint16_t data) {
-	mob_debug.can_msg->data.u64		= 0x0LL;
-	mob_debug.can_msg->data.u16[0]	= data;
-	mob_debug.can_msg->id			= 0x123;
-	mob_debug.dlc					= 2;
-	
-	can_tx(CAN_BUS_0,
-	mob_debug.handle,
-	mob_debug.dlc,
-	CAN_DATA_FRAME,
-	mob_debug.can_msg);
-}
-
-
-void ecu_can_blast32(uint32_t data) {
-	mob_debug.can_msg->data.u64		= 0x0LL;
-	mob_debug.can_msg->data.u32[0]	= data;
-	mob_debug.can_msg->id			= 0x123;
-	mob_debug.dlc					= 4;
-	
-	can_tx(CAN_BUS_0,
-	mob_debug.handle,
-	mob_debug.dlc,
-	CAN_DATA_FRAME,
-	mob_debug.can_msg);
-}
-
 
 void ecu_can_inverter_enable_drive() {
 	ecu_can_send_to_inverter(MODE_REG, 0x0000);
