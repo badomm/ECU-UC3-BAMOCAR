@@ -104,20 +104,6 @@ void ecu_can_send_slow_data(uint16_t motor_temp, uint16_t inverter_temp, uint8_t
 	mob_ecu_slow_data.can_msg);
 }
 
-void ecu_can_speed_command(int16_t rpm_cmd) {
-	// 	int16_t num = (rpm_cmd * 32767) / MAX_RPM;
-	// 	uint16_t rpm_intel = ((num >> 8) & 0xff) | ((num & 0xff) << 8);
-	// 	mob_tx_inverter.can_msg->data.u64 = 0x0LL;
-	// 	mob_tx_inverter.can_msg->data.u32[0]	= SPEED_CMD << 24 | rpm_intel << 8;
-	// 	mob_tx_inverter.can_msg->id				= INVERTER_ADDR_RX;
-	// 	mob_tx_inverter.dlc						= INVERTER_DLC_3;
-	//
-	// 	can_tx(CAN_BUS_0,
-	// 	mob_tx_inverter.handle,
-	// 	mob_tx_inverter.dlc,
-	// 	CAN_DATA_FRAME,
-	// 	mob_tx_inverter.can_msg);
-}
 
 void ecu_can_send_tractive_system_active(void) {
 	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
