@@ -10,9 +10,9 @@
 #include "INVERTER_defines.h"
 #include "ecu_can_mob.h"
 #include "revolve_can_definitions.h"
-
-
-
+////////////////
+//RX mailboxes for wheelspeed sensors
+///////////////
 can_msg_t msg_rx_speed_sens_fl = {
 	{
 		{
@@ -81,11 +81,15 @@ can_mob_t mob_rx_speed_sens_rr = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
+
+////////////////
+//RX mailboxes for dash data
+///////////////
 can_msg_t msg_rx_dash_data = {
 	{
 		{
-			.id			= CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID3_ID,
-			.id_mask	= 0x7FF,
+			.id			= CANR_FCN_DATA_ID | CANR_GRP_DASH_ID,
+			.id_mask	= 0x7F0,
 		},
 	},
 	.data.u64 = 0x0LL,
@@ -97,24 +101,6 @@ can_mob_t mob_rx_dash_data = {
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,
 };
-
-can_msg_t msg_rx_dash_pri = {
-	{
-		{
-			.id			= CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID0_ID,
-			.id_mask	= 0x7F8,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_rx_dash_pri = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_rx_dash_pri,
-	8,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
-
 
 can_msg_t msg_rx_trq_sens0  = {
 	{

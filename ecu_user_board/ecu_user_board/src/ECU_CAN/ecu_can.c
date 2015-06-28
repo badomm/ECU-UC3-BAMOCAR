@@ -59,7 +59,6 @@ void ecu_can_init(void) {
 	mob_rx_speed_sens_fr.handle	= 1;
 	mob_rx_speed_sens_rl.handle	= 2;
 	mob_rx_speed_sens_rr.handle	= 3;
-	mob_rx_dash_pri.handle		= 4;
 	mob_tx_dash.handle			= 5;
 	mob_rx_trq_sens0.handle		= 6;
 	mob_rx_trq_sens1.handle     = 7;
@@ -107,12 +106,6 @@ void ecu_can_init(void) {
 		, mob_rx_speed_sens_rr.can_msg
 	);
 	
-	can_rx(
-		CAN_BUS_0
-		, mob_rx_dash_pri.handle
-		, mob_rx_dash_pri.req_type
-		, mob_rx_dash_pri.can_msg
-	);
 	
 	can_rx(
 		CAN_BUS_0
@@ -167,27 +160,7 @@ void ecu_can_init(void) {
 }
 
 void can_out_callback_channel0(U8 handle, U8 event){
-	if (handle == mob_rx_dash_pri.handle) {
-		mob_rx_dash_pri.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;
-		mob_rx_dash_pri.can_msg->id			= can_get_mob_id(CAN_BUS_0, handle);
-		mob_rx_dash_pri.dlc					= can_get_mob_dlc(CAN_BUS_0, handle);
-		mob_rx_dash_pri.status				= event;
-		
-		dash_can_msg_t dash_can_msg;
-		
-		dash_can_msg.data.u64 = mob_rx_dash_pri.can_msg->data.u64;
-		dash_can_msg.id = mob_rx_dash_pri.can_msg->id;
-		xQueueSendToBackFromISR(queue_dash_msg, &dash_can_msg, NULL);
-		/* Empty message field */
-		mob_rx_dash_pri.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_0,
-		mob_rx_dash_pri.handle,
-		mob_rx_dash_pri.req_type,
-		mob_rx_dash_pri.can_msg);
-		
-	} else if (handle == mob_rx_dash_data.handle) {
+	if (handle == mob_rx_dash_data.handle) {
 		mob_rx_dash_data.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;
 		mob_rx_dash_data.can_msg->id			= can_get_mob_id(CAN_BUS_0, handle);
 		mob_rx_dash_data.dlc					= can_get_mob_dlc(CAN_BUS_0, handle);
@@ -202,10 +175,7 @@ void can_out_callback_channel0(U8 handle, U8 event){
 		mob_rx_dash_data.can_msg->data.u64 = 0x0LL;
 		
 		/* Prepare message reception */
-		can_rx(CAN_BUS_0, 
-		mob_rx_dash_data.handle,
-		mob_rx_dash_data.req_type,
-		mob_rx_dash_data.can_msg);
+		can_rx(CAN_BUS_0, mob_rx_dash_data.handle, mob_rx_dash_data.req_type, mob_rx_dash_data.can_msg);
 		
 	} else if (handle == mob_rx_trq_sens0.handle) {
 		mob_rx_trq_sens0.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;

@@ -9,6 +9,10 @@
 #ifndef ECU_CAN_MOB_H_
 #define ECU_CAN_MOB_H_
 
+
+////////////////
+//RX mailboxes for wheelspeed sensors
+///////////////
 extern can_msg_t msg_rx_speed_sens_fl;
 extern can_mob_t mob_rx_speed_sens_fl;
 extern can_msg_t msg_rx_speed_sens_fr;
@@ -17,10 +21,10 @@ extern can_msg_t msg_rx_speed_sens_rl;
 extern can_mob_t mob_rx_speed_sens_rl;
 extern can_msg_t msg_rx_speed_sens_rr;
 extern can_mob_t mob_rx_speed_sens_rr;
+
+
 extern can_msg_t msg_rx_dash_data;
 extern can_mob_t mob_rx_dash_data;
-extern can_msg_t msg_rx_dash_pri;
-extern can_mob_t mob_rx_dash_pri;
 extern can_msg_t msg_rx_trq_sens0;
 extern can_mob_t mob_rx_trq_sens0;
 extern can_msg_t msg_rx_trq_sens1;
