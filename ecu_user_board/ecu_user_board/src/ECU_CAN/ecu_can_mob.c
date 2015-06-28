@@ -307,12 +307,3 @@ can_mob_t mob_brk  = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-can_msg_t msg_slip_current  = {
-	{
-		{
-			.id			= CANR_FCN_DATA_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID7_ID,
-			.id_mask	= 0x7F8,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
