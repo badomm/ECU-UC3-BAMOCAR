@@ -152,23 +152,6 @@ can_mob_t mob_rx_trq_sens1 = {
 
 
 
-can_msg_t msg_debug  = {
-	{
-		{
-			.id			= 0x123,
-			.id_mask	= 0x7F8,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_debug  = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_debug,
-	4,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
-
 //
 can_msg_t msg_ecu_temp_and_maxTrq  = {
 	{

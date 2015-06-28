@@ -25,8 +25,6 @@ extern can_msg_t msg_rx_trq_sens0;
 extern can_mob_t mob_rx_trq_sens0;
 extern can_msg_t msg_rx_trq_sens1;
 extern can_mob_t mob_rx_trq_sens1;
-extern can_msg_t msg_debug;
-extern can_mob_t mob_debug;
 extern can_msg_t msg_ecu_temp_and_maxTrq;
 extern can_mob_t mob_ecu_temp_and_maxTrq;
 extern can_msg_t msg_ecu_inverter_status;
