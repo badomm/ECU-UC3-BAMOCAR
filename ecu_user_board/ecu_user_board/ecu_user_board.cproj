@@ -279,6 +279,7 @@
       <Value>../src/ASF/common/services/spi/uc3_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
       <Value>../src/mcp2515</Value>
+      <Value>../src/can-definitions</Value>
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
@@ -420,9 +421,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\queue_handles.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\revolve_can_definitions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\revolve_pid\include\revolve_pid.h">
