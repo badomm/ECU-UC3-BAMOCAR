@@ -182,7 +182,6 @@ static portTASK_FUNCTION(task_spi_can, pvParameters) {
 	while(1) {
 		vTaskDelayUntil(&first_run, TASK_SPI_CAN_PERIOD);
 		if (gpio_pin_is_low(INT1)) { // Data has been received. Start reception of data
-			//portENTER_CRITICAL(); // unsure if this is necessary?
 			
 			uint8_t canintfRegister;
 			canintfRegister = mcp2515_readRegister(&mcp2515_spiModule,CANINTF); // read the interrupt register
@@ -204,8 +203,6 @@ static portTASK_FUNCTION(task_spi_can, pvParameters) {
 				xQueueSendToBack( queue_from_inverter, &inverter_can_msg, 0 );
 				
 			}
-			
-			//portEXIT_CRITICAL();
 		}
 		
 
@@ -264,21 +261,19 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_10_HZ) == 0) {
 		ecu_can_inverter_read_reg(VDC_REG);
 		ecu_can_inverter_read_reg(RPM_REG);
-		ecu_can_send_fast_data(ecu_data->inverter_vdc, ecu_data->ecu_error, ecu_data->rpm, ecu_data->trq_cmd);
+		ecu_can_send_inverter_status(ecu_data->inverter_vdc, ecu_data->ecu_error, ecu_data->rpm, ecu_data->trq_cmd);
 	}
 	
 	if ((data_timer % TIMER_2_HZ) == 0) {
 		if (ecu_data->state == STATE_ERROR) {
-			ecu_can_send_alive(1);
-			} else {
-			ecu_can_send_alive(0);
+			ecu_can_send_alive();
 		}
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
 		ecu_can_inverter_read_reg(MOTOR_TEMP_REG);
 		ecu_can_inverter_read_reg(IGBT_TEMP_REG);
-		ecu_can_send_slow_data(ecu_data->motor_temp, ecu_data->inverter_temp, ecu_data->config_max_trq);
+		ecu_can_send_temp_and_maxTrq(ecu_data->motor_temp, ecu_data->inverter_temp, ecu_data->config_max_trq);
 		save_state(&mcp2515_spiModule, ecu_data);
 		data_timer = 0;
 		asm("nop");

@@ -70,7 +70,6 @@ void ecu_can_init(void) {
 	mob_rx_bms_battvolt.handle  = 12;
 	mob_rx_bspd.handle			= 13;
 	mob_rx_dash_data.handle		= 14;
-	mob_slip_current.handle     = 15;
 
 
 	/* Initialize CAN channels */
