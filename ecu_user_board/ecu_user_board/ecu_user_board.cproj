@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>6.1</ProjectVersion>
+    <ProjectVersion>6.2</ProjectVersion>
     <ProjectGuid>{22be9dec-2dd9-474b-919a-56d7bdb37f68}</ProjectGuid>
     <Name>$(MSBuildProjectName)</Name>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
@@ -133,6 +133,7 @@
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
     <avrtoolinterface>JTAG</avrtoolinterface>
+    <preserveEEPROM>true</preserveEEPROM>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -277,8 +278,6 @@
             <Value>../src/ASF/avr32/drivers/spi</Value>
             <Value>../src/ASF/common/services/spi/uc3_spi</Value>
             <Value>../src/ASF/common/services/spi</Value>
-            <Value>../src/mcp2515/</Value>
-            <Value>../src/ECU_CAN/include</Value>
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
         <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
@@ -356,6 +355,21 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\can-definitions\revolve_can_definitions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ECU_CAN\ecu_can.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ECU_CAN\ecu_can_messages.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ECU_CAN\ecu_can_mob.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\task_AliveMessage.c">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\avr32\drivers\wdt\wdt.h">
       <SubType>compile</SubType>
     </None>
@@ -377,6 +391,9 @@
     <None Include="src\ASF\common\services\spi\uc3_spi\spi_master.h">
       <SubType>compile</SubType>
     </None>
+    <None Include="src\can-definitions\.git">
+      <SubType>compile</SubType>
+    </None>
     <None Include="src\config\conf_spi_master.h">
       <SubType>compile</SubType>
     </None>
@@ -384,15 +401,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ECU_CAN\ecu_can_mob.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ECU_CAN\include\ecu_can.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ECU_CAN\include\ecu_can_messages.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ECU_CAN\include\ecu_can_mob.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\freertos\include\FreeRTOS.h">
@@ -702,8 +710,8 @@
     <Folder Include="src\ASF\common\services\spi\uc3_spi\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
+    <Folder Include="src\can-definitions\" />
     <Folder Include="src\config\" />
-    <Folder Include="src\ECU_CAN\include" />
     <Folder Include="src\freertos" />
     <Folder Include="src\freertos\include" />
     <Folder Include="src\freertos\portable" />

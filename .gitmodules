@@ -1,0 +1,6 @@
+[submodule "can-definitions"]
+	path = can-definitions
+	url = https://github.com/RevolveNTNU/can-definitions
+[submodule "ecu_user_board/ecu_user_board/src/can-definitions"]
+	path = ecu_user_board/ecu_user_board/src/can-definitions
+	url = https://github.com/RevolveNTNU/can-definitions
