@@ -56,11 +56,8 @@ void ecu_can_init(void) {
 	
 	/* Allocate channel message box */
 	mob_tx_dash.handle			= 5;
-	mob_rx_trq_sens0.handle		= 6;
-	mob_rx_trq_sens1.handle     = 7;
 	mob_ecu_temp_and_maxTrq.handle	= 8;
 	mob_rx_bms.handle	= 9;
-	mob_brk.handle				= 10;
 	mob_ecu_inverter_status.handle	= 11;
 	mob_rx_bspd.handle			= 13;
 	mob_rx_dash_data.handle		= 14;
@@ -79,19 +76,6 @@ void ecu_can_init(void) {
 		, mob_rx_dash_data.can_msg
 	);
 	
-	can_rx(
-		CAN_BUS_0
-		, mob_rx_trq_sens0.handle
-		, mob_rx_trq_sens0.req_type
-		, mob_rx_trq_sens0.can_msg
-	);
-
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_trq_sens1.handle
-		, mob_rx_trq_sens1.req_type
-		, mob_rx_trq_sens1.can_msg
-	);
 
 	
 	can_rx(
@@ -102,13 +86,7 @@ void ecu_can_init(void) {
 	);
 	
 
-	
-	can_rx(
-		CAN_BUS_1
-		, mob_brk.handle
-		, mob_brk.req_type
-		, mob_brk.can_msg
-	);
+
 	
 	can_rx(
 		CAN_BUS_0

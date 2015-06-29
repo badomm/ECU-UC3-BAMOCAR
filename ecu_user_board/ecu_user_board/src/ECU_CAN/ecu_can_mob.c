@@ -32,42 +32,6 @@ can_mob_t mob_rx_dash_data = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-////////////////
-//RX mailboxes for TPS data
-///////////////
-can_msg_t msg_rx_trq_sens0  = {
-	{
-		{
-			.id			= CANR_FCN_PRI_ID | CANR_GRP_SENS_ROTARY_ID | CANR_MODULE_ID0_ID,
-			.id_mask	= 0x7F8,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_rx_trq_sens0 = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_rx_trq_sens0,
-	3,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
-
-can_msg_t msg_rx_trq_sens1  = {
-	{
-		{
-			.id			= CANR_FCN_PRI_ID | CANR_GRP_SENS_ROTARY_ID | CANR_MODULE_ID1_ID,
-			.id_mask	= 0x7F8,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_rx_trq_sens1 = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_rx_trq_sens1,
-	3,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
 
 
 
@@ -172,23 +136,6 @@ can_mob_t mob_rx_bspd  = {
 	CAN_MOB_NOT_ALLOCATED,
 	&msg_rx_bspd,
 	1,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
-
-can_msg_t msg_brk  = {
-	{
-		{
-			.id			= CANR_FCN_DATA_ID | CANR_GRP_SENS_BRK_ID | CANR_MODULE_ID0_ID,
-			.id_mask	= 0x7FE,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_brk  = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_brk,
-	8,
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,
 };
