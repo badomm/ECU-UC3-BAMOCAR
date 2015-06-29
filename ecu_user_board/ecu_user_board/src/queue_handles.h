@@ -21,6 +21,7 @@ xQueueHandle queue_from_inverter;
 xQueueHandle queue_to_inverter;
 xQueueHandle queue_dash_msg;
 xQueueHandle queue_bms_rx;
+xQueueHandle queue_ecu_rx;
 xQueueHandle queue_bspd;
 
 

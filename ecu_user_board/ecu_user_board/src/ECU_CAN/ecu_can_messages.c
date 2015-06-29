@@ -82,20 +82,6 @@ void ecu_can_send_inverter_status(uint16_t inverter_vdc, uint16_t ecu_error, uin
 	can_tx(CAN_BUS_0, mob_ecu_inverter_status.handle, mob_ecu_inverter_status.dlc, CAN_DATA_FRAME, mob_ecu_inverter_status.can_msg);
 }
 
-//Send temperature and max torque status
-void ecu_can_send_temp_and_maxTrq(uint16_t motor_temp, uint16_t inverter_temp, uint8_t max_trq) {
-	mob_ecu_temp_and_maxTrq.can_msg->data.u64	 = 0x0LL;
-	mob_ecu_temp_and_maxTrq.can_msg->data.u16[0] = motor_temp;
-	mob_ecu_temp_and_maxTrq.can_msg->data.u16[1] = inverter_temp;
-	mob_ecu_temp_and_maxTrq.can_msg->data.u8[4] = max_trq;
-	
-	can_tx(CAN_BUS_1,
-	mob_ecu_temp_and_maxTrq.handle,
-	mob_ecu_temp_and_maxTrq.dlc,
-	CAN_DATA_FRAME,
-	mob_ecu_temp_and_maxTrq.can_msg);
-}
-
 void ecu_can_send_tractive_system_active(void) {
 	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
 	mob_tx_dash.can_msg->data.u16[0]  = 0x1;
@@ -103,11 +89,7 @@ void ecu_can_send_tractive_system_active(void) {
 	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID;
 	mob_tx_dash.dlc = 2;
 	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
+	can_tx(CAN_BUS_0, mob_tx_dash.handle, mob_tx_dash.dlc, CAN_DATA_FRAME,mob_tx_dash.can_msg);
 }
 
 void ecu_can_send_alive() {

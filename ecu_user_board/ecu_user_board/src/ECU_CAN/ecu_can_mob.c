@@ -32,27 +32,6 @@ can_mob_t mob_rx_dash_data = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-
-
-
-
-can_msg_t msg_ecu_temp_and_maxTrq  = {
-	{
-		{
-			.id			= CANR_FCN_DATA_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID1_ID,
-			.id_mask	= 0x7F8,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
-can_mob_t mob_ecu_temp_and_maxTrq  = {
-	CAN_MOB_NOT_ALLOCATED,
-	&msg_ecu_temp_and_maxTrq,
-	5,
-	CAN_DATA_FRAME,
-	CAN_STATUS_NOT_COMPLETED,
-};
-
 can_msg_t msg_ecu_inverter_status  = {
 	{
 		{
