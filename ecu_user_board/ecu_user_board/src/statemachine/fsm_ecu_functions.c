@@ -156,10 +156,7 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 		}
 		asm("nop");
 		break;
-		
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID3_ID):
-		ecu_data->config_max_trq = ecu_data->dash_msg.data.u8[1];
-		break;
+
 		
 		
 		default:
