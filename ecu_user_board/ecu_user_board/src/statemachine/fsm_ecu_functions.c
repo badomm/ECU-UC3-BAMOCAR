@@ -72,6 +72,11 @@ void ecu_dio_inverter_clear_error() {
 	gpio_set_pin_low(INVERTER_DIN1);
 }
 
+void inverter_turnOff(){
+	gpio_set_pin_low(FRG_PIN);
+	gpio_set_pin_low(RFE_PIN);
+	gpio_set_pin_low(AIR_PLUS);
+}
 
 void handle_inverter_data(fsm_ecu_data_t *ecu_data, inverter_can_msg_t inverter_can_msg) {
 	/* Note on receiving inverter data

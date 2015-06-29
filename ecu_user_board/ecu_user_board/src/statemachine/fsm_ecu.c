@@ -65,68 +65,67 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 
 	get_new_data(ecu_data);
 
-	if (ecu_data->flag_start_precharge == 1) {
-		switch (internal_state) {
-			case 0:
-				if (ecu_data->inverter_vdc > 0) {
-					internal_state = 1;
-					attempts = 0;	
-				}
-			attempts++;
-			break;
-			
-			case 1:
-			if (precharge_timer < 3*SOFTWARE_TIMER_1_SEC) {
-				precharge_timer++;
-			} else {
-				precharge_timer = 0;
-				ecu_dio_inverter_clear_error();
-				ecu_data->inverter_error = 0xDEAD;
-				ecu_can_inverter_read_reg(ERROR_REG);
-				internal_state = 2;	
+	switch (internal_state) {
+		case 0:
+			if (ecu_data->inverter_vdc > 0) {
+				internal_state = 1;
+				attempts = 0;	
 			}
-			break;
+		attempts++;
+		break;
 			
-			case 2:
-			if (ecu_data->inverter_error != 0xDEAD) {
-				internal_state = 3;
-				attempts = 0;
-			} else {
-				ecu_can_inverter_read_reg(ERROR_REG);
-				attempts++;
-			}
-			break;
-			
-			case 3:
-			if(check_inverter_error(ecu_data) == 0) {
-				attempts = 0; //Reset
-				internal_state = 0; //Reset
-				gpio_set_pin_high(AIR_PLUS);
-				//ecu_can_send_tractive_system_active();
-				next_state =  STATE_CHARGED;
-			}
-			attempts++;
-			break;
-			
-			default:
-			break;
+		case 1:
+		if (precharge_timer < 3*SOFTWARE_TIMER_1_SEC) {
+			precharge_timer++;
+		} else {
+			precharge_timer = 0;
+			ecu_dio_inverter_clear_error();
+			ecu_data->inverter_error = 0xDEAD;
+			ecu_can_inverter_read_reg(ERROR_REG);
+			internal_state = 2;	
 		}
+		break;
+			
+		case 2:
+		if (ecu_data->inverter_error != 0xDEAD) {
+			internal_state = 3;
+			attempts = 0;
+		} else {
+			ecu_can_inverter_read_reg(ERROR_REG);
+			attempts++;
+		}
+		break;
+			
+		case 3:
+		if( !check_inverter_error(ecu_data) && ecu_data->drive_enable) {
+			attempts = 0; //Reset
+			internal_state = 0; //Reset
+			gpio_set_pin_high(AIR_PLUS);
+			//ecu_can_send_tractive_system_active();
+			next_state =  STATE_CHARGED;
+		}
+		attempts++;
+		break;
+			
+		default:
+		break;
 	}
+	
 	
 	
 	if (attempts == ATTEMPT_LIMIT) {
 		switch (internal_state) {
 			case 0:
-			ecu_data->ecu_error |= (1 << ERR_BMS_COM);
+				ecu_data->ecu_error |= (1 << ERR_BMS_COM);
 			break;
 			case 1:
-			ecu_data->ecu_error |= (1 << ERR_INVERTER_VDC_LOW);
+				ecu_data->ecu_error |= (1 << ERR_INVERTER_VDC_LOW);
 			break;
 			case 2:
-			ecu_data->ecu_error |= (1 << ERR_INVERTER_COM);
+				ecu_data->ecu_error |= (1 << ERR_INVERTER_COM);
 			break;
 			case 3:
-			ecu_data->ecu_error |= (1 << ERR_INVERTER_INTERNAL);
+				ecu_data->ecu_error |= (1 << ERR_INVERTER_INTERNAL);
 			break;
 		}
 		attempts = 0;

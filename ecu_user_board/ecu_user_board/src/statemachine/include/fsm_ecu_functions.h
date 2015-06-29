@@ -19,7 +19,7 @@ void ecu_dio_inverter_clear_error(void);
 void get_new_data(fsm_ecu_data_t *ecu_data);
 void handle_bms_data(fsm_ecu_data_t *ecu_data, car_can_msg_t bms_msg);
 void handle_inverter_data(fsm_ecu_data_t *ecu_data, inverter_can_msg_t inverter_can_msg);
-
+void inverter_turnOff();
 
 
 
