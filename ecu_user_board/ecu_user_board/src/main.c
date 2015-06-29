@@ -226,7 +226,8 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_10_HZ) == 0) {
 		ecu_can_inverter_read_reg(VDC_REG);
 		ecu_can_inverter_read_reg(RPM_REG);
-		//ecu_can_send_inverter_status(ecu_data->inverter_vdc, ecu_data->ecu_error, ecu_data->rpm, ecu_data->trq_cmd);
+		ecu_can_send_voltage((float) ecu_data->inverter_vdc);
+		ecu_can_send_rpm( (float) ecu_data->rpm);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
