@@ -32,6 +32,7 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->state = STATE_STARTUP;
 	ecu_data->inverter_can_msg = (inverter_can_msg_t){.data.u64 = 0x0LL, .dlc = 0};
 	ecu_data->trq_cmd = 0;
+	ecu_data->control_u = 0;
 	ecu_data->dash_msg = (dash_can_msg_t){.data.u64 = 0x0LL, .id = 0};
 	ecu_data->bms_msg = (bms_can_msg_t){.data.u64 = 0x0LL, .id = 0};
 	ecu_data->vdc_battery = 0;
