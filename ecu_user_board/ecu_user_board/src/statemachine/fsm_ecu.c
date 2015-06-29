@@ -54,10 +54,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->arctos_mode = ARCTOS_MODE_NORMAL;
 	ecu_data->inverter_error = 0;
 	ecu_data->ecu_error = 0;
-	ecu_data->WFL_sens = 0;
-	ecu_data->WFR_sens = 0;
-	ecu_data->WRL_sens = 0;
-	ecu_data->WRR_sens = 0;
 	ecu_data->reboot = 0;
 	ecu_data->config_max_trq = 100;
 	ecu_data->Kp = Kp_default;
@@ -351,10 +347,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	return next_state;
 };
 
-
-
-
-
 fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_PLAUSIBILITY_ERROR;
 
@@ -381,7 +373,6 @@ fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *ecu_data 
 };
 
 
-	
 fsm_ecu_state_t fsm_ecu_state_error_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_ERROR;
 	get_new_data(ecu_data);

@@ -301,7 +301,6 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 		ecu_data->lc_filter_gain = Ts/(Ts + lc_filter_time);
 		break;
 		
-		
 		default:
 		break;
 	}

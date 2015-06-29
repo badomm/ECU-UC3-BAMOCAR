@@ -96,10 +96,6 @@ typedef struct fsm_ecu_data{
 	arctos_mode_t arctos_mode;
 	uint16_t inverter_error;
 	uint16_t ecu_error;
-	uint16_t WFL_sens;
-	uint16_t WFR_sens;
-	uint16_t WRL_sens;
-	uint16_t WRR_sens;
 	uint8_t reboot;
 	uint8_t config_max_trq;
 	float Kp;
