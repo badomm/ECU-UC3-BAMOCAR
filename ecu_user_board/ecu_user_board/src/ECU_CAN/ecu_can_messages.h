@@ -22,19 +22,11 @@ void ecu_can_inverter_read_torque_periodic(void);
 //Dash messages
 ////////////////////////////////
 
-//Send inverter and ecu status
-void ecu_can_send_inverter_status(uint16_t inverter_vdc, uint16_t ecu_error, uint16_t rpm, int16_t trq_cmd);
-
-//Send temperature and max torque status
-void ecu_can_send_temp_and_maxTrq(uint16_t motor_temp, uint16_t inverter_temp, uint8_t max_trq);
-
 void ecu_can_send_to_dash(uint16_t data);
-void ecu_can_send_tractive_system_active(void);
+
 
 void ecu_can_send_alive();
-void ecu_can_confirm_activate_launch(void);
-void ecu_can_send_launch_ready(void);
-void ecu_can_send_launch_stop(void);
-
+void ecu_can_send_voltage(float voltage);
+void ecu_can_send_rpm(float rpm);
 
 #endif /* ECU_CAN_MESSAGES_H_ */

@@ -263,6 +263,7 @@ typedef union
   U16 u16[2];
   S8  s8 [4];
   U8  u8 [4];
+  float f;
 } Union32;
 
 //! 64-bit union.

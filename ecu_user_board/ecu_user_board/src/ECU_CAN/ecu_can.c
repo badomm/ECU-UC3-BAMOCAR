@@ -13,6 +13,7 @@
 #include "INVERTER_defines.h"
 #include "queue_handles.h"
 #include "ecu_can_mob.h"
+#include "endianSwapper.h"
 /* Note on reception using .u64
  * Format 0xDATADATA		DATADATA
  *          u32[0]			u32[1]
@@ -60,6 +61,8 @@ void ecu_can_init(void) {
 	/* Allocate channel message box */
 	mob_tx_dash.handle = 1;
 	mob_rx_ecu.handle = 2;
+	mob_tx_voltage.handle = 3;
+	mob_tx_rpm.handle = 4;
 	mob_torque_request_ecu.handle = 7;
 
 
@@ -95,12 +98,15 @@ void can_out_callback_channel1(U8 handle, U8 event){
 							 .id = can_get_mob_id(CAN_BUS_1, handle)
 							};
 	/*Check which handle the message is*/
-	
+
 	//Torque Request from ECU
 	if (handle == mob_torque_request_ecu.handle) {
 		can_mob = &mob_torque_request_ecu;
-		xQueueOverwriteFromISR(torque_request_ecu, &mob_torque_request_ecu.can_msg->data.f[0], NULL );
+		Union32 swappedData;
+		swappedData.u32 = endianSwapperU32(mob_torque_request_ecu.can_msg->data.u32[0]);
+		xQueueOverwriteFromISR(torque_request_ecu, &swappedData.f, NULL );
 	}
+	//ECU: drive enable and disable
 	else if (handle == mob_rx_ecu.handle) {
 		can_mob = &mob_rx_ecu;
 		xQueueOverwriteFromISR(queue_ecu_rx, &mob_rx_ecu.can_msg, NULL );

@@ -27,7 +27,10 @@ extern can_mob_t mob_rx_ecu;
 
 extern can_mob_t mob_torque_request_ecu;
 
+extern can_msg_t msg_tx_voltage;
+extern can_mob_t mob_tx_voltage;
 
-
+extern can_msg_t msg_tx_rpm;
+extern can_mob_t mob_tx_rpm;
 
 #endif /* ECU_CAN_MOB_H_ */

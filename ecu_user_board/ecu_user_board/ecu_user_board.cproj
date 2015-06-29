@@ -413,6 +413,9 @@
     <Compile Include="src\ECU_CAN\ecu_can_mob.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\endianSwapper.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\freertos\include\FreeRTOS.h">
       <SubType>compile</SubType>
     </Compile>
