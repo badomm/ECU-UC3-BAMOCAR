@@ -48,7 +48,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->config_max_trq = 100;
 	ecu_data->kers_factor = 0;
 	ecu_data->bms_current = 0;
-	ecu_data->slip = 0;
 }
 
 fsm_ecu_state_func_t *const fsm_ecu_state_table[ FSM_ECU_NUM_STATES ] = {

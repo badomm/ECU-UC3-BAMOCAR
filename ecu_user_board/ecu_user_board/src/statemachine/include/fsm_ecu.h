@@ -76,7 +76,6 @@ typedef struct fsm_ecu_data{
 	uint8_t config_max_trq;
 	int16_t kers_factor;
 	int16_t bms_current;
-	int16_t slip;
 }fsm_ecu_data_t;
 
 void fsm_ecu_init(fsm_ecu_data_t *data);

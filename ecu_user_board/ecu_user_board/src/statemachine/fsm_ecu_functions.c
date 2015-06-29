@@ -138,7 +138,7 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 	uint8_t start;
 	uint8_t lc_filter_time;
 	uint8_t state_of_lc = 0;
-	uint16_t slip_index = 0;
+
 	switch (ecu_data->dash_msg.id) {
 		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID0_ID):
 		rtds_plays = ecu_data->dash_msg.data.u8[0];
@@ -146,22 +146,6 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 			ecu_data->flag_drive_enable = DRIVE_ENABLE_RTDS_PLAYS;
 		}
 		break;
-		
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID1_ID):
-		start = ecu_data->dash_msg.data.u8[0];
-		//uint8_t tractive = ecu_data->dash_msg.data.u8[1];
-		ecu_data->kers_factor = ecu_data->dash_msg.data.s16[1];
-		slip_index = ecu_data->dash_msg.data.u16[2];
-		slip_index = min(slip_index, 5);
-
-		if (start == 0) {
-			ecu_data->flag_drive_enable = DRIVE_DISABLE_REQUEST;
-		} else if (start == 1) {
-			ecu_data->flag_drive_enable = DRIVE_ENABLE_REQUEST;
-		}
-		asm("nop");
-		break;
-		
 		
 		case (CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID3_ID):
 		//Only permit if ECU in error
