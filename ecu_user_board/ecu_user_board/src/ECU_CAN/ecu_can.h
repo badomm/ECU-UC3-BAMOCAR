@@ -25,15 +25,11 @@ typedef struct inverter_can_msg{
 	uint32_t dlc;
 }inverter_can_msg_t;
 
-typedef struct bms_can_msg{
+typedef struct car_can_msg{
 	Union64 data;
 	uint32_t id;
-}bms_can_msg_t;
+}car_can_msg_t;
 
-typedef struct dash_can_msg{
-	Union64 data;
-	uint16_t id;
-}dash_can_msg_t;
 
 void ecu_can_init(void);
 #endif /* ECU_CAN_H_ */

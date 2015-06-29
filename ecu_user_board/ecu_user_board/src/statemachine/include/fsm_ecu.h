@@ -60,8 +60,8 @@ typedef struct fsm_ecu_data{
 	inverter_can_msg_t inverter_can_msg;
 	int16_t trq_cmd;
 	float trq_pedal;
-	dash_can_msg_t dash_msg;
-	bms_can_msg_t bms_msg;
+	car_can_msg_t dash_msg;
+	car_can_msg_t bms_msg;
 	uint16_t vdc_battery;
 	uint16_t inverter_vdc;
 	uint16_t rpm;

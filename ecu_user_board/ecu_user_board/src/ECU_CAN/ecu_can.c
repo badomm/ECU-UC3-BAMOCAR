@@ -85,7 +85,7 @@ void can_out_callback_channel0(U8 handle, U8 event){
 		mob_rx_dash_data.dlc					= can_get_mob_dlc(CAN_BUS_0, handle);
 		mob_rx_dash_data.status				= event;
 		
-		dash_can_msg_t dash_can_msg;
+		car_can_msg_t dash_can_msg;
 		
 		dash_can_msg.data.u64 = mob_rx_dash_data.can_msg->data.u64;
 		dash_can_msg.id = mob_rx_dash_data.can_msg->id;
@@ -121,7 +121,7 @@ void can_out_callback_channel1(U8 handle, U8 event){
 		mob_rx_bms.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
 		mob_rx_bms.status				= event;
 		
-		bms_can_msg_t bms_can_msg;
+		car_can_msg_t bms_can_msg;
 		bms_can_msg.data.u64 = mob_rx_bms.can_msg->data.u64;
 		bms_can_msg.id = mob_rx_bms.can_msg->id;
 		xQueueSendToBackFromISR(queue_bms_rx, &bms_can_msg, NULL);

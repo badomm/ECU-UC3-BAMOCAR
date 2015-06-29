@@ -62,9 +62,9 @@ int main(void){
 	mcp2515_spiModule = spi_init_module();
 	queue_from_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN, sizeof(inverter_can_msg_t));
 	queue_to_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN+5, sizeof(inverter_can_msg_t));
-	queue_dash_msg		= xQueueCreate(QUEUE_DASH_MSG_LEN, sizeof(dash_can_msg_t));	
-	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(bms_can_msg_t));
-	queue_ecu_rx		= 
+	queue_dash_msg		= xQueueCreate(QUEUE_DASH_MSG_LEN, sizeof(car_can_msg_t));	
+	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(car_can_msg_t));
+	queue_ecu_rx		= xQueueCreate(QUEUE_ECU_RX_LEN, sizeof(car_can_msg_t));
 	queue_bspd			= xQueueCreate(1, sizeof(uint8_t));
 	
 	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);

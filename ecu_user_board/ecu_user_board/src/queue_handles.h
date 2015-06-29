@@ -15,6 +15,7 @@
 #define QUEUE_INVERTER_RX_LEN	5
 #define QUEUE_DASH_MSG_LEN		5
 #define QUEUE_BMS_RX_LEN		5
+#define QUEUE_ECU_RX_LEN		5
 
 /* Queues for task communication */
 xQueueHandle queue_from_inverter;
