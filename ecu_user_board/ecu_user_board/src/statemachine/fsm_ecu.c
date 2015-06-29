@@ -68,12 +68,10 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 	if (ecu_data->flag_start_precharge == 1) {
 		switch (internal_state) {
 			case 0:
-			if (ecu_data->vdc_battery > 0) {
 				if (ecu_data->inverter_vdc > 0) {
 					internal_state = 1;
 					attempts = 0;	
 				}
-			}
 			attempts++;
 			break;
 			
