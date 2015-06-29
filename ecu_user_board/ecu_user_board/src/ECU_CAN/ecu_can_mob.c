@@ -36,8 +36,8 @@ can_mob_t mob_tx_dash = {
 can_msg_t msg_rx_ecu = {
 	{
 		{
-			.id			= CANR_FCN_BOOT_ID | CANR_GRP_ECU_ID,
-			.id_mask	= 0x7F0,
+			.id			= 0x230,
+			.id_mask	= 0x7FF,
 		},
 	},
 	.data.u64 = 0x0LL,

@@ -22,6 +22,9 @@ extern can_mob_t mob_tx_dash;
 extern can_msg_t msg_rx_bms;
 extern can_mob_t mob_rx_bms;
 
+extern can_msg_t msg_rx_ecu;
+extern can_mob_t mob_rx_ecu;
+
 extern can_mob_t mob_torque_request_ecu;
 
 

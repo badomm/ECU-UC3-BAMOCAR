@@ -37,7 +37,7 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->inverter_temp = 0;
 	ecu_data->flag_start_precharge = 0;
 	ecu_data->max_cell_temp = 0;
-	ecu_data->flag_drive_enable = DRIVE_DISABLED;
+	ecu_data->drive_enable = false;
 	ecu_data->inverter_error = 0;
 	ecu_data->ecu_error = 0;
 	ecu_data->reboot = 0;
@@ -205,7 +205,6 @@ fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *ecu_data ) {
 		case 2:
 		if (check_inverter_error(ecu_data) == 0) {
 			internal_state = 0; //Reset for next possible restart
-			ecu_data->flag_drive_enable = DRIVE_ENABLED;
 			next_state = STATE_READY;
 		} else {
 			//set error code - return inverters error register?
@@ -242,7 +241,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 		gpio_set_pin_low(FRG_PIN);
 		gpio_set_pin_low(RFE_PIN);
 		gpio_set_pin_low(AIR_PLUS);
-		ecu_data->flag_drive_enable = DRIVE_DISABLED;
 		ecu_data->flag_start_precharge = 0;
 
 		return STATE_STARTUP;

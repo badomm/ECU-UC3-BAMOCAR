@@ -10,7 +10,7 @@
 #define FSM_ECU_H_
 
 #include "ecu_can.h"
-
+#include <stdbool.h>
 #define TRQ_MISSED_LIMIT 2
 
 
@@ -39,13 +39,7 @@ typedef enum fsm_ecu_state{
 	FSM_ECU_NUM_STATES,
 } fsm_ecu_state_t;
 
-typedef enum flag_drive_enable{
-	DRIVE_DISABLED,
-	DRIVE_ENABLE_REQUEST,
-	DRIVE_ENABLED,
-	DRIVE_ENABLE_RTDS_PLAYS,
-	DRIVE_DISABLE_REQUEST,
-} flag_drive_enable_t;
+
 
 enum carState_t{READY_TO_START = 1, PLAYING_RTDS = 2, READY_TO_DRIVE = 3};
 
@@ -60,7 +54,7 @@ typedef struct fsm_ecu_data{
 	uint16_t inverter_temp;
 	uint8_t flag_start_precharge;
 	int8_t max_cell_temp;
-	flag_drive_enable_t flag_drive_enable;
+	bool drive_enable;
 	uint16_t inverter_error;
 	uint16_t ecu_error;
 	uint8_t reboot;

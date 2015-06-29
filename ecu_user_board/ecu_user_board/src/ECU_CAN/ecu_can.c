@@ -59,6 +59,7 @@ void ecu_can_init(void) {
 	
 	/* Allocate channel message box */
 	mob_tx_dash.handle = 1;
+	mob_rx_ecu.handle = 2;
 	mob_torque_request_ecu.handle = 7;
 
 
@@ -69,6 +70,7 @@ void ecu_can_init(void) {
 	
 	/* Prepare for message reception */
 	setupRxmailbox(CAN_BUS_1, mob_torque_request_ecu);
+	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
 	asm("nop");
 }
 
@@ -97,10 +99,14 @@ void can_out_callback_channel1(U8 handle, U8 event){
 	//Torque Request from ECU
 	if (handle == mob_torque_request_ecu.handle) {
 		can_mob = &mob_torque_request_ecu;
-		xQueueOverwriteFromISR(queue_bspd, &mob_torque_request_ecu.can_msg->data.f[0], NULL );
+		xQueueOverwriteFromISR(torque_request_ecu, &mob_torque_request_ecu.can_msg->data.f[0], NULL );
+	}
+	else if (handle == mob_rx_ecu.handle) {
+		can_mob = &mob_rx_ecu;
+		xQueueOverwriteFromISR(queue_ecu_rx, &mob_rx_ecu.can_msg, NULL );
 	}
 	
-	/*Reset mailbox and prepeare for reception*/
+	/*Reset mailbox and prepare for reception*/
 	if(can_mob != NULL){
 			can_mob->can_msg->data.u64 = 0x0LL; /* Empty message field */
 			setupRxmailbox(CAN_BUS_1, *can_mob); /* Prepare message reception */

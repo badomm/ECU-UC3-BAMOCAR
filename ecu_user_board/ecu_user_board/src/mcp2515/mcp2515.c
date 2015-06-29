@@ -301,7 +301,7 @@ void save_state(struct spi_device * spi_dev, fsm_ecu_data_t *ecu_data) {
 	uint8_t dataToWrite[ECU_DATA_BUF_LEN] = { 
 		ecu_data->state,
 		ecu_data->flag_start_precharge,
-		(uint8_t)ecu_data->flag_drive_enable,
+		(uint8_t)ecu_data->drive_enable,
 		ecu_data->config_max_trq
 	}; 
 	mcp2515_write_array(spi_dev,dataToWrite, ECU_DATA_BUF_LEN ,addr);
@@ -313,7 +313,7 @@ void load_state(struct spi_device * spi_dev, fsm_ecu_data_t *ecu_data) {
 	mcp2515_read_array(spi_dev, data, ECU_DATA_BUF_LEN, addr);
 	ecu_data->state					 = (fsm_ecu_state_t)data[0];
 	ecu_data->flag_start_precharge	 = data[1];
-	ecu_data->flag_drive_enable		 = (flag_drive_enable_t)data[2];
+	ecu_data->drive_enable		 = (bool)data[2];
 	uint16_t temp					 = data[4] << 8;
 	ecu_data->config_max_trq		 = (uint8_t)data[6];
 }

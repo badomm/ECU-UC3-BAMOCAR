@@ -116,9 +116,6 @@ void handle_inverter_data(fsm_ecu_data_t *ecu_data, inverter_can_msg_t inverter_
 	}
 }
 
-#define ECU_CURRENT_CAR_STATE 0x633
-#define ECU_IMPLAUSIBILITIES  0x635
-
 
 void get_new_data(fsm_ecu_data_t *ecu_data) {
 	uint8_t i;
@@ -138,6 +135,12 @@ void get_new_data(fsm_ecu_data_t *ecu_data) {
 	}else{
 		if(!torqueRequestTimeout--){
 			ecu_data->trq_request = 0;
+		}
+	}
+	
+	while(xQueueReceive(queue_ecu_rx, &can_msg, 0 ) == pdTRUE) {
+		if(0x230 == can_msg.id ){
+				ecu_data->drive_enable = (can_msg.data.u8[0] == 0x2);
 		}
 	}
 }

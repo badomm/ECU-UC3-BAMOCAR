@@ -64,8 +64,7 @@ int main(void){
 	queue_to_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN+5, sizeof(inverter_can_msg_t));
 	queue_dash_msg		= xQueueCreate(QUEUE_DASH_MSG_LEN, sizeof(car_can_msg_t));	
 	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(car_can_msg_t));
-	queue_ecu_rx		= xQueueCreate(QUEUE_ECU_RX_LEN, sizeof(car_can_msg_t));
-	queue_bspd			= xQueueCreate(1, sizeof(uint8_t));
+	queue_ecu_rx		= xQueueCreate(1, sizeof(car_can_msg_t));
 	torque_request_ecu  = xQueueCreate(1, sizeof(float));
 	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);
  	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
