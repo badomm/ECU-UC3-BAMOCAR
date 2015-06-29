@@ -13,6 +13,8 @@
 
 #define TRQ_MISSED_LIMIT 2
 
+
+
 /* ECU error register			BIT	 Explanation */
 #define ERR_BMS_COM				0 // Lost communicating with BMS
 #define ERR_INVERTER_VDC_LOW	1 // Inverter side voltage not >90 % of battery pack voltage
@@ -24,13 +26,7 @@
 #define ERR_AIR_PLUS			7 // AIR PLUS is low
 #define ERR_BSPD				8 // BSPD signal loss
 
-// Filter parameters
-#define Ts						0.02F // System sampling time 50 Hz
-#define PEDAL_FILTER_T			0 // Safe to choose 0.02F
-#define PEDAL_FILTER_GAIN		Ts/(PEDAL_FILTER_T + Ts)
-#define LC_FILTER_T_DEFAULT		1.5F // Launch control rise time
-#define LC_FILTER_GAIN_DEFAULT	Ts/(LC_FILTER_T_DEFAULT + Ts); // Low pass filter gain
-#define LC_TRQ_INIT_DEFAULT		(float)30*MAX_TORQUE/100.0				
+		
 
 
 typedef enum fsm_ecu_state{
@@ -51,17 +47,12 @@ typedef enum flag_drive_enable{
 	DRIVE_DISABLE_REQUEST,
 } flag_drive_enable_t;
 
+enum carState_t{READY_TO_START = 1, PLAYING_RTDS = 2, READY_TO_DRIVE = 3};
 
-
-
-
-typedef struct fsm_ecu_data{
+typedef struct fsm_ecu_data{	
+	float trq_request;
 	fsm_ecu_state_t state;
-	inverter_can_msg_t inverter_can_msg;
-	int16_t trq_cmd;
-	float trq_pedal;
-	car_can_msg_t dash_msg;
-	car_can_msg_t bms_msg;
+	
 	uint16_t vdc_battery;
 	uint16_t inverter_vdc;
 	uint16_t rpm;
@@ -87,7 +78,6 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *data );
-fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_error_func( fsm_ecu_data_t *data );
 
 

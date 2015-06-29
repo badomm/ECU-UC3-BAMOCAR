@@ -276,6 +276,7 @@ typedef union
   U16 u16[4];
   S8  s8 [8];
   U8  u8 [8];
+  float f[2];
 } Union64;
 
 //! Union of pointers to 64-, 32-, 16- and 8-bit unsigned integers.
