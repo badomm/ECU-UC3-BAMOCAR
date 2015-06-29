@@ -34,7 +34,6 @@ typedef enum fsm_ecu_state{
 	STATE_CHARGED,
 	STATE_ENABLE_DRIVE,
 	STATE_READY,
-	STATE_PLAUSIBILITY_ERROR,
 	STATE_ERROR,
 	FSM_ECU_NUM_STATES,
 } fsm_ecu_state_t;

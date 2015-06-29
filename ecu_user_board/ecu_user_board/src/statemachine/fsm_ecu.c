@@ -26,7 +26,7 @@
 #define SOFTWARE_TIMER_0_5_SEC		25
 #define SOFTWARE_TIMER_1_SEC		50
 
-static uint16_t attempts =	0;
+
 
 void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->state = STATE_STARTUP;
@@ -46,65 +46,69 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->bms_current = 0;
 }
 
-fsm_ecu_state_func_t *const fsm_ecu_state_table[ FSM_ECU_NUM_STATES ] = {
-	fsm_ecu_state_startup_func,
-	fsm_ecu_state_charged_func,
-	fsm_ecu_state_enable_drive_func,
-	fsm_ecu_state_ready_func,
-	fsm_ecu_state_error_func,
-};
-
 fsm_ecu_state_t fsm_ecu_run_state( fsm_ecu_state_t current_state, fsm_ecu_data_t *data) {
-	return fsm_ecu_state_table[ current_state ]( data );
+	get_new_data(ecu_data);
+	fsm_ecu_state_t newState;
+	switch(current_state){
+		case STATE_STARTUP: newState = fsm_ecu_state_startup_func( data ); break;
+		case STATE_CHARGED: newState = fsm_ecu_state_charged_func( data); break;
+		case STATE_ENABLE_DRIVE: newState = fsm_ecu_state_enable_drive_func( data ); break;
+		case STATE_READY: newState = fsm_ecu_state_ready_func(data); break;
+		case STATE_ERROR: newState = fsm_ecu_state_error_func(data); break;
+		default: newState = STATE_ERROR;
+	}
+	return newState;
 };
 
+
+enum startup_states ={STARTUP_CHECK_INVERTER_VOLTAGE, STARTUP_PRECHARGING, STARTUP_ERROR_CHECK, STARTUP_LAST_ERROR_CHECK };
 fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_STARTUP;
-	static uint8_t internal_state = 0;
+	static enum startup_states internal_state = STARTUP_CHECK_INVERTER_VOLTAGE;
 	static uint8_t precharge_timer = 0;
-
-	get_new_data(ecu_data);
+	static uint16_t attempts =	0;
 
 	switch (internal_state) {
-		case 0:
+		case STARTUP_CHECK_INVERTER_VOLTAGE:
 			if (ecu_data->inverter_vdc > 0) {
-				internal_state = 1;
+				internal_state = STARTUP_PRECHARGING;
 				attempts = 0;	
+			}else{
+				attempts++;
 			}
-		attempts++;
 		break;
 			
-		case 1:
-		if (precharge_timer < 3*SOFTWARE_TIMER_1_SEC) {
-			precharge_timer++;
-		} else {
-			precharge_timer = 0;
-			ecu_dio_inverter_clear_error();
-			ecu_data->inverter_error = 0xDEAD;
-			ecu_can_inverter_read_reg(ERROR_REG);
-			internal_state = 2;	
-		}
+		case STARTUP_PRECHARGING:
+			if (precharge_timer < 3*SOFTWARE_TIMER_1_SEC) {
+				precharge_timer++;
+				} else {
+				precharge_timer = 0;
+				ecu_dio_inverter_clear_error();
+				ecu_data->inverter_error = 0xDEAD;
+				ecu_can_inverter_read_reg(ERROR_REG);
+				internal_state = STARTUP_ERROR_CHECK;
+			}
 		break;
 			
-		case 2:
-		if (ecu_data->inverter_error != 0xDEAD) {
-			internal_state = 3;
-			attempts = 0;
-		} else {
-			ecu_can_inverter_read_reg(ERROR_REG);
-			attempts++;
-		}
+		case STARTUP_ERROR_CHECK:
+			if (ecu_data->inverter_error != 0xDEAD) {
+				internal_state = STARTUP_LAST_ERROR_CHECK;
+				attempts = 0;
+			} else {
+				ecu_can_inverter_read_reg(ERROR_REG);
+				attempts++;
+			}
 		break;
 			
-		case 3:
-		if( !check_inverter_error(ecu_data) && ecu_data->drive_enable) {
-			attempts = 0; //Reset
-			internal_state = 0; //Reset
-			gpio_set_pin_high(AIR_PLUS);
-			//ecu_can_send_tractive_system_active();
-			next_state =  STATE_CHARGED;
-		}
-		attempts++;
+		case STARTUP_LAST_ERROR_CHECK:
+			if( !check_inverter_error(ecu_data)) {
+				attempts = 0; //Reset
+				internal_state = STARTUP_CHECK_INVERTER_VOLTAGE; //Reset
+				gpio_set_pin_high(AIR_PLUS);
+				next_state =  STATE_CHARGED;
+			}else{
+				attempts++;
+			}
 		break;
 			
 		default:
@@ -137,24 +141,19 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 
 fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_CHARGED;
-
-	get_new_data(ecu_data);
 	
 	//Check charge rate, if bad, go to startup
 	if (ecu_data->inverter_vdc < 50) {
-		gpio_set_pin_low(FRG_PIN);
-		gpio_set_pin_low(RFE_PIN);
-		gpio_set_pin_low(AIR_PLUS);
+		inverter_turnOff();
 		ecu_data->flag_start_precharge = 0;
 		//Reinitialize ECU here if still <90% error
 		return STATE_STARTUP;
 	}
-	
 	if (gpio_pin_is_low(AIR_PLUS)) {
 		ecu_data->ecu_error |= (1 << ERR_AIR_PLUS);
 		next_state = STATE_ERROR;
 	}
-	if (next_state != STATE_ERROR) {
+	if (next_state != STATE_ERROR &&  ecu_data->drive_enable) {
 		next_state = STATE_ENABLE_DRIVE;
 	}
 	return next_state;
@@ -163,17 +162,21 @@ fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_ENABLE_DRIVE;
 	static uint8_t internal_state = 0;
-	get_new_data(ecu_data);
+	static uint16_t attempts =	0;
 	
 	if (ecu_data->inverter_vdc < 50) {
-		gpio_set_pin_low(FRG_PIN);
-		gpio_set_pin_low(RFE_PIN);
-		gpio_set_pin_low(AIR_PLUS);
+		inverter_turnOff();
 		ecu_data->flag_start_precharge = 0;
 		//Reinitialize ECU here if still <90% error
 		return STATE_STARTUP;
 	}
 
+	if(!ecu_data->drive_enable){
+		inverter_turnOff();
+		gpio_set_pin_high(AIR_PLUS);
+		return STATE_CHARGED;
+	}
+	
 	switch (internal_state) {
 		case 0:
 		gpio_set_pin_high(RFE_PIN);
@@ -231,16 +234,17 @@ fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *ecu_data ) {
 fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_READY;
 	int16_t kers = 0;
-	
-	get_new_data(ecu_data);
 
 	if (ecu_data->inverter_vdc < 50) {
-		gpio_set_pin_low(FRG_PIN);
-		gpio_set_pin_low(RFE_PIN);
-		gpio_set_pin_low(AIR_PLUS);
+		inverter_turnOff();
 		ecu_data->flag_start_precharge = 0;
-
 		return STATE_STARTUP;
+	}
+	
+	if(!ecu_data->drive_enable){
+		inverter_turnOff();
+		gpio_set_pin_high(AIR_PLUS);
+		return STATE_CHARGED;
 	}
 	
 	/* First set trq_cmd to 0. Will be updated if the following tests are passed. 
@@ -261,15 +265,10 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	return next_state;
 };
 
-
-
 fsm_ecu_state_t fsm_ecu_state_error_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_ERROR;
-	get_new_data(ecu_data);
-	/* Disable AIR+ */
-	gpio_set_pin_low(AIR_PLUS);
-	gpio_set_pin_low(FRG_PIN);
-	gpio_set_pin_low(RFE_PIN);
+
+	inverter_turnOff();
 	ecu_can_inverter_torque_cmd(0x0);
 	
 	if (ecu_data->reboot == 1) {
