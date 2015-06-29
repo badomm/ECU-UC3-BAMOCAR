@@ -236,7 +236,7 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_1_HZ) == 0) {
 		ecu_can_inverter_read_reg(MOTOR_TEMP_REG);
 		ecu_can_inverter_read_reg(IGBT_TEMP_REG);
-		ecu_can_send_temp_and_maxTrq(ecu_data->motor_temp, ecu_data->inverter_temp, 0);
+		ecu_can_send_temp_and_maxTrq(ecu_data->motor_temp, ecu_data->inverter_temp, ecu_data->config_max_trq);
 		save_state(&mcp2515_spiModule, ecu_data);
 		data_timer = 0;
 		asm("nop");

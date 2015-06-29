@@ -73,6 +73,7 @@ typedef struct fsm_ecu_data{
 	uint16_t inverter_error;
 	uint16_t ecu_error;
 	uint8_t reboot;
+	uint8_t config_max_trq;
 	int16_t kers_factor;
 	int16_t bms_current;
 }fsm_ecu_data_t;

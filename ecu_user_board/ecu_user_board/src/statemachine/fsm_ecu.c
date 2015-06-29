@@ -45,6 +45,7 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->inverter_error = 0;
 	ecu_data->ecu_error = 0;
 	ecu_data->reboot = 0;
+	ecu_data->config_max_trq = 100;
 	ecu_data->kers_factor = 0;
 	ecu_data->bms_current = 0;
 }
@@ -318,7 +319,9 @@ fsm_ecu_state_t fsm_ecu_state_error_func( fsm_ecu_data_t *ecu_data ) {
 	
 	if (ecu_data->reboot == 1) {
 		ecu_data->reboot = 0;
+		uint8_t max_torque = ecu_data->config_max_trq;
 		fsm_ecu_init(ecu_data); // Reinitialize data struct
+		ecu_data->config_max_trq = max_torque;
 		next_state = STATE_STARTUP;
 	}
 	return next_state;
