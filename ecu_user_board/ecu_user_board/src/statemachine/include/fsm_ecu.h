@@ -81,9 +81,6 @@ typedef struct fsm_ecu_data{
 	uint16_t ecu_error;
 	uint8_t reboot;
 	uint8_t config_max_trq;
-	float Kp;
-	float Ki;
-	float Kd;
 	float d_filter_gain;
 	float lc_filter_gain;
 	float lc_trq_init;

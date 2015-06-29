@@ -174,14 +174,6 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 		asm("nop");
 		break;
 		
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID2_ID):
-		//PID gains
-		ecu_data->Kp = ecu_data->dash_msg.data.u16[0]/10.0;
-		ecu_data->Ki = ecu_data->dash_msg.data.u16[1]/10.0;
-		ecu_data->Kd = ecu_data->dash_msg.data.u16[2]/10.0;
-		ecu_data->d_filter_gain = (N_filter*Ts/(ecu_data->Kd+N_filter*Ts));
-		asm("nop");
-		break;
 		
 		case (CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID3_ID):
 		//Only permit if ECU in error
