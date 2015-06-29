@@ -156,7 +156,7 @@ static portTASK_FUNCTION(task_spi_can, pvParameters) {
 			bool messageReceivedOnBuffer1 = canintfRegister & ( 1 << RX1IF);
 			
 			if ( messageReceivedOnBuffer0){
-				gpio_toggle_pin(LED3);
+				//gpio_toggle_pin(LED3);
 				inverter_can_msg.data.u64 = 0x00L;
 				inverter_can_msg.dlc = mcp2515_getReceivedMessage(&mcp2515_spiModule,0,inverter_can_msg.data.u8,6);
 				xQueueSendToBack( queue_from_inverter, &inverter_can_msg, 0 );
