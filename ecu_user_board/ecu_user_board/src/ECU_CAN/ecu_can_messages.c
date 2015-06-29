@@ -110,94 +110,9 @@ void ecu_can_send_tractive_system_active(void) {
 	mob_tx_dash.can_msg);
 }
 
-void ecu_can_send_play_rtds(void) {
-	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
-	mob_tx_dash.can_msg->data.u16[0]  = 0x2;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID;
-	mob_tx_dash.dlc = 2;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
-}
-
-void ecu_can_send_ready_to_drive(void) {
-	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
-	mob_tx_dash.can_msg->data.u16[0]  = 0x3;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID;
-	mob_tx_dash.dlc = 2;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
-}
-
-void ecu_can_send_drive_disabled(void) {
-	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
-	mob_tx_dash.can_msg->data.u16[0]  = 0x4;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID;
-	mob_tx_dash.dlc = 2;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
-}
-
 void ecu_can_send_alive() {
 	mob_tx_dash.can_msg->data.u8[0]  = ALIVE_INVERTER;	
 	mob_tx_dash.can_msg->id = CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID;
 	mob_tx_dash.dlc = CANR_ALIVE_MSG_DLC;
 	can_tx(CAN_BUS_0, mob_tx_dash.handle, mob_tx_dash.dlc, CAN_DATA_FRAME,mob_tx_dash.can_msg);
 }
-
-void ecu_can_confirm_activate_launch(void) {
-	mob_tx_dash.can_msg->data.u64	= 0x0LL;
-	mob_tx_dash.can_msg->data.u8[0]	= 0x1;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID1_ID;
-	mob_tx_dash.dlc = 1;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
-}
-
-void ecu_can_send_launch_ready(void) {
-	mob_tx_dash.can_msg->data.u64	= 0x0LL;
-	mob_tx_dash.can_msg->data.u8[0]	= 0x2;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID1_ID;
-	mob_tx_dash.dlc = 1;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
-}
-
-void ecu_can_send_launch_stop(void) {
-	mob_tx_dash.can_msg->data.u64	= 0x0LL;
-	mob_tx_dash.can_msg->data.u8[0]	= 255;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID1_ID;
-	mob_tx_dash.dlc = 1;
-	
-	can_tx(CAN_BUS_0,
-	mob_tx_dash.handle,
-	mob_tx_dash.dlc,
-	CAN_DATA_FRAME,
-	mob_tx_dash.can_msg);
-}
-

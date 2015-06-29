@@ -174,7 +174,6 @@ fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 			next_state = STATE_ERROR;
 		}
 		if (next_state != STATE_ERROR) {
-				ecu_can_send_play_rtds();
 				next_state = STATE_ENABLE_DRIVE;
 		}
 	}
@@ -224,7 +223,6 @@ fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *ecu_data ) {
 			case 2:
 			if (check_inverter_error(ecu_data) == 0) {
 				internal_state = 0; //Reset for next possible restart
-				ecu_can_send_ready_to_drive();
 				ecu_data->flag_drive_enable = DRIVE_ENABLED;
 				next_state = STATE_READY;
 			} else {
@@ -261,7 +259,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	if (ecu_data->flag_drive_enable == DRIVE_DISABLE_REQUEST) {
 		gpio_set_pin_low(FRG_PIN);
 		ecu_data->flag_drive_enable = DRIVE_DISABLED;
-		ecu_can_send_drive_disabled();
 		return STATE_CHARGED;
 	}
 	
@@ -269,7 +266,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 		gpio_set_pin_low(FRG_PIN);
 		gpio_set_pin_low(RFE_PIN);
 		gpio_set_pin_low(AIR_PLUS);
-		ecu_can_send_drive_disabled();
 		ecu_data->flag_drive_enable = DRIVE_DISABLED;
 		ecu_data->flag_start_precharge = 0;
 

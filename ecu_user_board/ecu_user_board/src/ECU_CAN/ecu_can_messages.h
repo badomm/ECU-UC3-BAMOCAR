@@ -31,10 +31,7 @@ void ecu_can_send_temp_and_maxTrq(uint16_t motor_temp, uint16_t inverter_temp, u
 void ecu_can_send_to_dash(uint16_t data);
 void ecu_can_send_tractive_system_active(void);
 
-void ecu_can_send_ready_to_drive(void);
-void ecu_can_send_play_rtds(void);
 void ecu_can_send_alive();
-void ecu_can_send_drive_disabled(void);
 void ecu_can_confirm_activate_launch(void);
 void ecu_can_send_launch_ready(void);
 void ecu_can_send_launch_stop(void);
