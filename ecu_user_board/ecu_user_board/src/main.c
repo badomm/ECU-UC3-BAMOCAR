@@ -66,7 +66,7 @@ int main(void){
 	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(car_can_msg_t));
 	queue_ecu_rx		= xQueueCreate(QUEUE_ECU_RX_LEN, sizeof(car_can_msg_t));
 	queue_bspd			= xQueueCreate(1, sizeof(uint8_t));
-	
+	torque_request_ecu  = xQueueCreate(1, sizeof(float));
 	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);
  	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
 	xTaskCreate(task_watchdog, (signed portCHAR *) "Watchdog", configMINIMAL_STACK_SIZE, NULL, TASK_WATCHDOG_PRIORITY, NULL);
@@ -227,7 +227,7 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_10_HZ) == 0) {
 		ecu_can_inverter_read_reg(VDC_REG);
 		ecu_can_inverter_read_reg(RPM_REG);
-		ecu_can_send_inverter_status(ecu_data->inverter_vdc, ecu_data->ecu_error, ecu_data->rpm, ecu_data->trq_cmd);
+		//ecu_can_send_inverter_status(ecu_data->inverter_vdc, ecu_data->ecu_error, ecu_data->rpm, ecu_data->trq_cmd);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
