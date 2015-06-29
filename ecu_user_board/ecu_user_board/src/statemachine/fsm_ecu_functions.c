@@ -189,11 +189,6 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 		ecu_data->config_max_trq = ecu_data->dash_msg.data.u8[1];
 		break;
 		
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID4_ID):
-		ecu_data->lc_trq_init = ecu_data->dash_msg.data.u8[0];
-		lc_filter_time = ecu_data->dash_msg.data.u8[1];
-		ecu_data->lc_filter_gain = Ts/(Ts + lc_filter_time);
-		break;
 		
 		default:
 		break;

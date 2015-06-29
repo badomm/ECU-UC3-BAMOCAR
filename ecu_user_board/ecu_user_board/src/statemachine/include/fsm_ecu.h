@@ -24,15 +24,8 @@
 #define ERR_AIR_PLUS			7 // AIR PLUS is low
 #define ERR_BSPD				8 // BSPD signal loss
 
-// PID parameters
-#define Kp_default				2.0F	// Proportional gain
-#define Ki_default				1.0F	// Integral gain (Ki = 1/Ti)
-#define Kd_default				0.0F	// Derivation gain
-#define N_filter				100.0F	// -> Derivate filter time constant Tf = Kd / N, (Kd = Td)
-
 // Filter parameters
 #define Ts						0.02F // System sampling time 50 Hz
-#define D_FILTER_GAIN_DEFAULT	(N_filter*Ts/(Kd_default+N_filter*Ts))
 #define PEDAL_FILTER_T			0 // Safe to choose 0.02F
 #define PEDAL_FILTER_GAIN		Ts/(PEDAL_FILTER_T + Ts)
 #define LC_FILTER_T_DEFAULT		1.5F // Launch control rise time
@@ -81,9 +74,6 @@ typedef struct fsm_ecu_data{
 	uint16_t ecu_error;
 	uint8_t reboot;
 	uint8_t config_max_trq;
-	float d_filter_gain;
-	float lc_filter_gain;
-	float lc_trq_init;
 	int16_t kers_factor;
 	int16_t bms_current;
 	int16_t slip;
