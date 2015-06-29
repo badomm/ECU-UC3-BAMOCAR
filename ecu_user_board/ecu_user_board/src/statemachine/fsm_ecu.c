@@ -60,7 +60,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->Ki = Ki_default;
 	ecu_data->Kd = Kd_default;
 	ecu_data->d_filter_gain = D_FILTER_GAIN_DEFAULT;
-	ecu_data->slip_target = 0;
 	ecu_data->inverter_timeout = 0;
 	ecu_data->lc_filter_gain = LC_FILTER_GAIN_DEFAULT;
 	ecu_data->lc_trq_init = LC_TRQ_INIT_DEFAULT;
@@ -280,7 +279,6 @@ fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *ecu_data ) {
 	return next_state;
 };
 	
-	
 fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_READY;
 	int16_t kers = 0;
@@ -337,7 +335,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 		if (kers < 0) {
 			ecu_data->trq_cmd = kers;
 		} else {
- 			map_pedal(ecu_data);
 			ecu_data->trq_cmd = (int16_t)ecu_data->trq_pedal;
  		}
 	}
@@ -371,7 +368,6 @@ fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *ecu_data 
 	ecu_can_inverter_torque_cmd(ecu_data->trq_cmd);
 	return next_state;
 };
-
 
 fsm_ecu_state_t fsm_ecu_state_error_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_ERROR;

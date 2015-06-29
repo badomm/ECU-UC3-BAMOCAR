@@ -34,7 +34,6 @@
 
 // Filter parameters
 #define Ts						0.02F // System sampling time 50 Hz
-#define SLIP_TARGET_DEFAULT		0.2F
 #define D_FILTER_GAIN_DEFAULT	(N_filter*Ts/(Kd_default+N_filter*Ts))
 #define PEDAL_FILTER_T			0 // Safe to choose 0.02F
 #define PEDAL_FILTER_GAIN		Ts/(PEDAL_FILTER_T + Ts)
@@ -101,7 +100,6 @@ typedef struct fsm_ecu_data{
 	float Kp;
 	float Ki;
 	float Kd;
-	float slip_target;
 	float d_filter_gain;
 	uint8_t inverter_timeout; //Not used (practically)
 	float lc_filter_gain;

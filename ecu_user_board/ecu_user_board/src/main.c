@@ -12,8 +12,6 @@
 #include "INVERTER_defines.h"
 #include "queue_handles.h"
 #include "ecu_can.h"
-#include "revolve_pid.h"
-#include "rtwtypes.h"
 #include "fsm_ecu.h"
 #include "mcp2515.h"
 #include <stdbool.h>

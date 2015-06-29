@@ -423,24 +423,6 @@
     <Compile Include="src\queue_handles.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\revolve_pid\include\revolve_pid.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\revolve_pid\include\revolve_pid_private.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\revolve_pid\include\revolve_pid_types.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\revolve_pid\include\rtwtypes.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\revolve_pid\revolve_pid.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\revolve_pid\revolve_pid_data.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\statemachine\fsm_ecu.c">
       <SubType>compile</SubType>
     </Compile>
@@ -708,8 +690,6 @@
     <Folder Include="src\ECU_CAN" />
     <Folder Include="src\mcp2515" />
     <Folder Include="src\statemachine" />
-    <Folder Include="src\revolve_pid" />
-    <Folder Include="src\revolve_pid\include" />
     <Folder Include="src\statemachine\include" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC32.targets" />

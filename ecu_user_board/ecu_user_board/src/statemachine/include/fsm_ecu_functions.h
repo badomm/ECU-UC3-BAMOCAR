@@ -28,7 +28,6 @@ void get_new_data(fsm_ecu_data_t *ecu_data);
 void handle_bms_data(fsm_ecu_data_t *ecu_data);
 void handle_dash_data(fsm_ecu_data_t *ecu_data);
 void handle_inverter_data(fsm_ecu_data_t *ecu_data);
-void map_pedal(fsm_ecu_data_t *ecu_data);
 
 
 

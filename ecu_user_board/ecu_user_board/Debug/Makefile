@@ -73,8 +73,6 @@ SUBDIRS :=  \
 ../src/ECU_CAN \
 ../src/mcp2515 \
 ../src/statemachine \
-../src/revolve_pid \
-../src/revolve_pid/include \
 ../src/statemachine/include
 
 
@@ -88,8 +86,6 @@ C_SRCS +=  \
 ../src/freertos/portable/heap_1.c \
 ../src/freertos/queue.c \
 ../src/mcp2515/mcp2515.c \
-../src/revolve_pid/revolve_pid.c \
-../src/revolve_pid/revolve_pid_data.c \
 ../src/statemachine/fsm_ecu.c \
 ../src/statemachine/fsm_ecu_functions.c \
 ../src/ASF/avr32/drivers/canif/canif.c \
@@ -129,8 +125,6 @@ src/ECU_CAN/ecu_can_mob.o \
 src/freertos/portable/heap_1.o \
 src/freertos/queue.o \
 src/mcp2515/mcp2515.o \
-src/revolve_pid/revolve_pid.o \
-src/revolve_pid/revolve_pid_data.o \
 src/statemachine/fsm_ecu.o \
 src/statemachine/fsm_ecu_functions.o \
 src/ASF/avr32/drivers/canif/canif.o \
@@ -163,8 +157,6 @@ src/ECU_CAN/ecu_can_mob.o \
 src/freertos/portable/heap_1.o \
 src/freertos/queue.o \
 src/mcp2515/mcp2515.o \
-src/revolve_pid/revolve_pid.o \
-src/revolve_pid/revolve_pid_data.o \
 src/statemachine/fsm_ecu.o \
 src/statemachine/fsm_ecu_functions.o \
 src/ASF/avr32/drivers/canif/canif.o \
@@ -197,8 +189,6 @@ src/ECU_CAN/ecu_can_mob.d \
 src/freertos/portable/heap_1.d \
 src/freertos/queue.d \
 src/mcp2515/mcp2515.d \
-src/revolve_pid/revolve_pid.d \
-src/revolve_pid/revolve_pid_data.d \
 src/statemachine/fsm_ecu.d \
 src/statemachine/fsm_ecu_functions.d \
 src/ASF/avr32/drivers/canif/canif.d \
@@ -231,8 +221,6 @@ src/ECU_CAN/ecu_can_mob.d \
 src/freertos/portable/heap_1.d \
 src/freertos/queue.d \
 src/mcp2515/mcp2515.d \
-src/revolve_pid/revolve_pid.d \
-src/revolve_pid/revolve_pid_data.d \
 src/statemachine/fsm_ecu.d \
 src/statemachine/fsm_ecu_functions.d \
 src/ASF/avr32/drivers/canif/canif.d \
@@ -271,10 +259,6 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
-
-
-
-
 
 
 
@@ -373,13 +357,6 @@ src/freertos/%.o: ../src/freertos/%.c
 	
 
 src/mcp2515/%.o: ../src/mcp2515/%.c
-	@echo Building file: $<
-	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -DBOARD=USER_BOARD  -I"../src" -I"../src/ASF/avr32/drivers/intc" -I"../src/ASF/avr32/utils" -I"../src/ASF/avr32/utils/preprocessor" -I"../src/ASF/common/boards" -I"../src/ASF/common/boards/user_board" -I"../src/ASF/common/utils" -I"../src/config" -I"../src/ASF/avr32/drivers/flashc" -I"../src/ASF/common/services/clock" -I"../src/ASF/avr32/drivers/gpio" -I"../src/ASF/avr32/drivers/cpu/cycle_counter" -I"../src/ASF/common/services/delay" -I"../src/freertos/include" -I"../src/freertos/portable" -I"../src/freertos" -I"../src/ASF/avr32/drivers/canif" -I"../src/ASF/avr32/services/network/can" -I"../src/ECU_CAN" -I"../src/ASF/avr32/drivers/scif" -I"../src/revolve_pid" -I"../src/revolve_pid/include" -I"../src/statemachine" -I"../src/statemachine/include" -I"../src/ASF/avr32/drivers/wdt" -I"../src/ASF/avr32/drivers/spi" -I"../src/ASF/common/services/spi/uc3_spi" -I"../src/ASF/common/services/spi" -I"../src/mcp2515" -I"../src/can-definitions"  -O1 -fdata-sections -ffunction-sections -g3 -Wall -mpart=uc3c2512c -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-src/revolve_pid/%.o: ../src/revolve_pid/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.1067\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -DBOARD=USER_BOARD  -I"../src" -I"../src/ASF/avr32/drivers/intc" -I"../src/ASF/avr32/utils" -I"../src/ASF/avr32/utils/preprocessor" -I"../src/ASF/common/boards" -I"../src/ASF/common/boards/user_board" -I"../src/ASF/common/utils" -I"../src/config" -I"../src/ASF/avr32/drivers/flashc" -I"../src/ASF/common/services/clock" -I"../src/ASF/avr32/drivers/gpio" -I"../src/ASF/avr32/drivers/cpu/cycle_counter" -I"../src/ASF/common/services/delay" -I"../src/freertos/include" -I"../src/freertos/portable" -I"../src/freertos" -I"../src/ASF/avr32/drivers/canif" -I"../src/ASF/avr32/services/network/can" -I"../src/ECU_CAN" -I"../src/ASF/avr32/drivers/scif" -I"../src/revolve_pid" -I"../src/revolve_pid/include" -I"../src/statemachine" -I"../src/statemachine/include" -I"../src/ASF/avr32/drivers/wdt" -I"../src/ASF/avr32/drivers/spi" -I"../src/ASF/common/services/spi/uc3_spi" -I"../src/ASF/common/services/spi" -I"../src/mcp2515" -I"../src/can-definitions"  -O1 -fdata-sections -ffunction-sections -g3 -Wall -mpart=uc3c2512c -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
