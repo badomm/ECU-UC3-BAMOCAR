@@ -18,12 +18,6 @@
 #define MAX_KERS					(int16_t)-3277
 
 
-
-
-
-
-
-
 uint16_t calc_bms_power(fsm_ecu_data_t *ecu_data) {
 	int16_t current = ecu_data->bms_current;
 	int16_t voltage = ecu_data->vdc_battery;
