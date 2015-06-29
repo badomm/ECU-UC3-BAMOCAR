@@ -14,7 +14,7 @@
 #include "queue_handles.h"
 #include "fsm_ecu.h"
 #include "fsm_ecu_functions.h"
-#include "fsm_control.h"
+
 
 #define BSPD_SIGNAL_LOSS_WARNING	0x42
 #define BSPD_I_AM_ALIVE				0xAA
@@ -59,7 +59,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->WFR_sens = 0;
 	ecu_data->WRL_sens = 0;
 	ecu_data->WRR_sens = 0;
-	ecu_data->launch_control_flag = LAUNCH_CONTROL_INACTIVE;
 	ecu_data->reboot = 0;
 	ecu_data->config_max_trq = 100;
 	ecu_data->Kp = Kp_default;
@@ -80,9 +79,6 @@ fsm_ecu_state_func_t *const fsm_ecu_state_table[ FSM_ECU_NUM_STATES ] = {
 	fsm_ecu_state_charged_func,
 	fsm_ecu_state_enable_drive_func,
 	fsm_ecu_state_ready_func,
-	fsm_ecu_state_init_launch_func,
-	fsm_ecu_state_launch_control_func,
-	fsm_ecu_state_deactivate_launch_func,
 	fsm_ecu_state_plausibility_error_func,
 	fsm_ecu_state_error_func,
 };
@@ -316,13 +312,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 		return STATE_STARTUP;
 	}
 	
-	if (ecu_data->launch_control_flag == LAUNCH_CONTROL_INITIATE) {
-		if ((ecu_data->trq_sens0 < 20) && (ecu_data->trq_sens1 < 20) && (ecu_data->trq_cmd == 0)) {
-			asm("nop");
-			ecu_can_confirm_activate_launch();
-			return STATE_INIT_LAUNCH;
-		} 	
-	}
 	
 	uint8_t bspd = check_bspd();
 	
@@ -363,125 +352,9 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	return next_state;
 };
 
-fsm_ecu_state_t fsm_ecu_state_init_launch_func( fsm_ecu_data_t *ecu_data ) {	
-	//Check if pedals are at max
-	//Timeout after 10 seconds if not
-	static uint16_t activation_timer = 0;
-	static uint8_t verification_timer = 0;
-	int16_t trq_min = 0;
-	fsm_ecu_state_t next_state = STATE_INIT_LAUNCH;
-	
-	get_new_data(ecu_data);
-	get_trq_sens(ecu_data);
-	if (torque_plausibility_check(ecu_data)) {
-		trq_min = min(ecu_data->trq_sens0, ecu_data->trq_sens1);
-		if (trq_min > 500) {
-			if (verification_timer < SOFTWARE_TIMER_0_5_SEC) {
-				verification_timer++;
-			} else {
-				activation_timer = 0;
-				verification_timer = 0;
-				//Pedals has been > 500 for 0.5 sec
-				verification_timer = 0;
-				ecu_can_send_launch_ready();
-				next_state = STATE_LAUNCH_CONTROL;
-			}
-		} else {
-			verification_timer = 0;
-			activation_timer++;
-		}
-	}
-	
-	if (activation_timer == SOFTWARE_TIMER_10_SEC) {
-		activation_timer = 0;
-		verification_timer = 0;
-		ecu_can_send_launch_stop();
-		ecu_data->launch_control_flag = LAUNCH_CONTROL_INACTIVE;
-		next_state = STATE_DEACTIVATE_LAUNCH;
-	}
-	
-	return next_state;
-}	
 
-fsm_ecu_state_t fsm_ecu_state_launch_control_func( fsm_ecu_data_t *ecu_data ) {
-	int16_t trq_min = 0;
-	static uint16_t activation_timer = 0;
-	fsm_ecu_state_t next_state = STATE_LAUNCH_CONTROL;
-	
-	get_new_data(ecu_data);
-	get_trq_sens(ecu_data);
-	
-	if (torque_plausibility_check(ecu_data)) {
-		trq_min = min(ecu_data->trq_sens0, ecu_data->trq_sens1);
-		if (trq_min > 500) {
-			switch (ecu_data->launch_control_flag) {
-				case LAUNCH_CONTROL_INITIATE:
-				activation_timer++;
-				break;
-				
-				case LAUNCH_CONTROL_COUNTDOWN_COMPLETE:
-				ecu_data->launch_control_flag = LAUNCH_CONTROL_ACTIVE;
-				activation_timer = 0;	
-				break;
-				
-				case LAUNCH_CONTROL_ACTIVE:
-				launch_control(ecu_data);
-				ecu_can_inverter_torque_cmd(ecu_data->trq_cmd);
-				break;
-				
-				default:
-				break;	
-			}
-		} else {
-			// Exit launch control
-			switch (ecu_data->launch_control_flag) {
-				case LAUNCH_CONTROL_INITIATE:
-					activation_timer = 0;
-					ecu_can_send_launch_stop();
-					next_state = STATE_DEACTIVATE_LAUNCH;
-					break;
-				case LAUNCH_CONTROL_ACTIVE:
-					activation_timer = 0;
-					next_state = STATE_READY;
-					break;
-				default:
-					activation_timer = 0;
-					ecu_can_send_launch_stop();
-					next_state = STATE_DEACTIVATE_LAUNCH;
-					break;
-			}	
-		}
-	} else {
-		//Torque sensor implausibility
-		ecu_data->trq_cmd = 0;
-		ecu_can_inverter_torque_cmd(ecu_data->trq_cmd);
-		gpio_set_pin_low(FRG_PIN);
-		next_state = STATE_PLAUSIBILITY_ERROR;	
-	}
-	
-	if (activation_timer == SOFTWARE_TIMER_10_SEC) {
-		activation_timer = 0;
-		ecu_can_send_launch_stop();
-		next_state = STATE_DEACTIVATE_LAUNCH;
-	}
-	
-	return next_state;
-}
 
-fsm_ecu_state_t fsm_ecu_state_deactivate_launch_func( fsm_ecu_data_t *ecu_data ) {
-	//Wait for 5 seconds before returning to ready state
-	static uint8_t timer = 0;
-	if (timer < SOFTWARE_TIMER_5_SEC) {
-		timer++;
-		ecu_data->trq_cmd = 0;
-		ecu_can_inverter_torque_cmd(ecu_data->trq_cmd);
-		return STATE_DEACTIVATE_LAUNCH;
-	} else {
-		timer = 0;
-		ecu_can_send_ready_to_drive();
-		return STATE_READY;
-	}
-}
+
 
 fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_PLAUSIBILITY_ERROR;
@@ -499,11 +372,8 @@ fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *ecu_data 
 			}
 		} else {
 			gpio_set_pin_high(FRG_PIN);
-			if (ecu_data->launch_control_flag == LAUNCH_CONTROL_ACTIVE) {
-				next_state = STATE_LAUNCH_CONTROL;
-			} else {
-				next_state = STATE_READY;	
-			}
+			next_state = STATE_READY;	
+
 		}
 	}
 	ecu_data->trq_cmd = 0x0;

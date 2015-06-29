@@ -63,7 +63,6 @@ int main(void){
 	mcp2515_spiModule = spi_init_module();
 	queue_from_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN, sizeof(inverter_can_msg_t));
 	queue_to_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN+5, sizeof(inverter_can_msg_t));
-	//queue_traction_control = xQueueCreate(1, sizeof(int16_t));
 	queue_dash_msg		= xQueueCreate(QUEUE_DASH_MSG_LEN, sizeof(dash_can_msg_t));	
 	queue_trq_sens0		= xQueueCreate(1, sizeof(int16_t));
 	queue_trq_sens1		= xQueueCreate(1, sizeof(int16_t));

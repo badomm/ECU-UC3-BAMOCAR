@@ -48,9 +48,6 @@ typedef enum fsm_ecu_state{
 	STATE_CHARGED,
 	STATE_ENABLE_DRIVE,
 	STATE_READY,
-	STATE_INIT_LAUNCH,
-	STATE_LAUNCH_CONTROL,
-	STATE_DEACTIVATE_LAUNCH,
 	STATE_PLAUSIBILITY_ERROR,
 	STATE_ERROR,
 	FSM_ECU_NUM_STATES,
@@ -70,12 +67,7 @@ typedef enum arctos_mode{
 	ARCTOS_MODE_INDOORS,
 } arctos_mode_t;
 
-typedef enum launch_control_type {
-	LAUNCH_CONTROL_INACTIVE,
-	LAUNCH_CONTROL_INITIATE,
-	LAUNCH_CONTROL_COUNTDOWN_COMPLETE,
-	LAUNCH_CONTROL_ACTIVE,
-} launch_control_t;
+
 
 
 
@@ -110,7 +102,6 @@ typedef struct fsm_ecu_data{
 	uint16_t WFR_sens;
 	uint16_t WRL_sens;
 	uint16_t WRR_sens;
-	launch_control_t launch_control_flag;
 	uint8_t reboot;
 	uint8_t config_max_trq;
 	float Kp;
@@ -135,9 +126,6 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_enable_drive_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *data );
-fsm_ecu_state_t fsm_ecu_state_init_launch_func( fsm_ecu_data_t *data );
-fsm_ecu_state_t fsm_ecu_state_launch_control_func( fsm_ecu_data_t *data );
-fsm_ecu_state_t fsm_ecu_state_deactivate_launch_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *data );
 fsm_ecu_state_t fsm_ecu_state_error_func( fsm_ecu_data_t *data );
 

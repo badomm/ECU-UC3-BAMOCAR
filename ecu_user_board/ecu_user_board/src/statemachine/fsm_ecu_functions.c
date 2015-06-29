@@ -301,10 +301,6 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 		ecu_data->lc_filter_gain = Ts/(Ts + lc_filter_time);
 		break;
 		
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID5_ID):
-		state_of_lc = ecu_data->dash_msg.data.u8[0];
-		ecu_data->launch_control_flag = (launch_control_t)state_of_lc;
-		break;
 		
 		default:
 		break;

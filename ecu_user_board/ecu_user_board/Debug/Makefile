@@ -92,7 +92,6 @@ C_SRCS +=  \
 ../src/revolve_pid/revolve_pid_data.c \
 ../src/statemachine/fsm_ecu.c \
 ../src/statemachine/fsm_ecu_functions.c \
-../src/statemachine/fsm_control.c \
 ../src/ASF/avr32/drivers/canif/canif.c \
 ../src/ASF/avr32/drivers/scif/scif_uc3c.c \
 ../src/ASF/avr32/services/network/can/can.c \
@@ -134,7 +133,6 @@ src/revolve_pid/revolve_pid.o \
 src/revolve_pid/revolve_pid_data.o \
 src/statemachine/fsm_ecu.o \
 src/statemachine/fsm_ecu_functions.o \
-src/statemachine/fsm_control.o \
 src/ASF/avr32/drivers/canif/canif.o \
 src/ASF/avr32/drivers/scif/scif_uc3c.o \
 src/ASF/avr32/services/network/can/can.o \
@@ -169,7 +167,6 @@ src/revolve_pid/revolve_pid.o \
 src/revolve_pid/revolve_pid_data.o \
 src/statemachine/fsm_ecu.o \
 src/statemachine/fsm_ecu_functions.o \
-src/statemachine/fsm_control.o \
 src/ASF/avr32/drivers/canif/canif.o \
 src/ASF/avr32/drivers/scif/scif_uc3c.o \
 src/ASF/avr32/services/network/can/can.o \
@@ -204,7 +201,6 @@ src/revolve_pid/revolve_pid.d \
 src/revolve_pid/revolve_pid_data.d \
 src/statemachine/fsm_ecu.d \
 src/statemachine/fsm_ecu_functions.d \
-src/statemachine/fsm_control.d \
 src/ASF/avr32/drivers/canif/canif.d \
 src/ASF/avr32/drivers/scif/scif_uc3c.d \
 src/ASF/avr32/services/network/can/can.d \
@@ -239,7 +235,6 @@ src/revolve_pid/revolve_pid.d \
 src/revolve_pid/revolve_pid_data.d \
 src/statemachine/fsm_ecu.d \
 src/statemachine/fsm_ecu_functions.d \
-src/statemachine/fsm_control.d \
 src/ASF/avr32/drivers/canif/canif.d \
 src/ASF/avr32/drivers/scif/scif_uc3c.d \
 src/ASF/avr32/services/network/can/can.d \
@@ -276,8 +271,6 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
-
-
 
 
 
