@@ -74,7 +74,7 @@ void ecu_can_init(void) {
 	setupRxmailbox(CAN_BUS_0, mob_rx_dash_data);
 	setupRxmailbox(CAN_BUS_1, mob_rx_bms);
 	setupRxmailbox(CAN_BUS_0, mob_rx_bspd);
-	setupRxmailbox(CAN_BUS_0, mob_rx_ecu);
+	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
 	asm("nop");
 }
 
@@ -106,33 +106,35 @@ void can_out_callback_channel0(U8 handle, U8 event){
 		/* Empty message field */
 		mob_rx_bspd.can_msg->data.u64 = 0x0LL;
 		/* Prepare message reception */
-		can_rx(CAN_BUS_0,
-		mob_rx_bspd.handle,
-		mob_rx_bspd.req_type,
-		mob_rx_bspd.can_msg);
-	} 
+		can_rx(CAN_BUS_0, mob_rx_bspd.handle, mob_rx_bspd.req_type, mob_rx_bspd.can_msg);
+	}
 }
 
 /* Call Back called by can_drv, channel 1 */
 void can_out_callback_channel1(U8 handle, U8 event){
-	 if (handle == mob_rx_bms.handle) {
-		mob_rx_bms.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_bms.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_bms.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_bms.status				= event;
-		
-		car_can_msg_t bms_can_msg;
-		bms_can_msg.data.u64 = mob_rx_bms.can_msg->data.u64;
-		bms_can_msg.id = mob_rx_bms.can_msg->id;
-		xQueueSendToBackFromISR(queue_bms_rx, &bms_can_msg, NULL);
-		/* Empty message field */
-		mob_rx_bms.can_msg->data.u64 = 0x0LL;
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1,
-		mob_rx_bms.handle,
-		mob_rx_bms.req_type,
-		mob_rx_bms.can_msg);
-		
+	can_mob_t *can_mob = NULL;
+	car_can_msg_t can_msg = {.data.u64 = can_get_mob_data(CAN_BUS_1, handle).u64,
+							 .id = can_get_mob_id(CAN_BUS_1, handle)
+							};
+	/*Check which handle the message is*/
+	
+	//BMS
+	if(handle == mob_rx_bms.handle){
+			can_mob = &mob_rx_bms;
+			xQueueSendToBackFromISR(queue_bms_rx, &can_msg, NULL);
+	}
+	//ECU
+	else if(handle == mob_rx_ecu.handle){
+			can_mob = &mob_rx_ecu;
+			xQueueSendToBackFromISR(queue_ecu_rx, &can_msg, NULL);
+	}		
+	
+	/*Reset mailbox and prepeare for reception*/
+	if(can_mob != NULL){
+			/* Empty message field */
+			can_mob->can_msg->data.u64 = 0x0LL;
+			/* Prepare message reception */
+			can_rx(CAN_BUS_1, can_mob->handle, can_mob->req_type, can_mob->can_msg);
 	}
 }
 
