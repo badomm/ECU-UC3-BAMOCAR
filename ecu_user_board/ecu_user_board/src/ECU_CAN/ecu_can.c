@@ -29,6 +29,7 @@ volatile can_msg_t mob_ram_ch0[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ra
 volatile can_msg_t mob_ram_ch1[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ram_loc")));
 
 
+
 void ecu_can_init(void) {
 	/* Setup the generic clock for CAN output */
 	scif_gc_setup(
@@ -87,6 +88,13 @@ void ecu_can_init(void) {
 		, mob_rx_bspd.handle
 		, mob_rx_bspd.req_type
 		, mob_rx_bspd.can_msg
+	);
+	
+	can_rx(
+		CAN_BUS_0
+		, mob_rx_ecu.handle
+		, mob_rx_ecu.req_type
+		, mob_rx_ecu.can_msg
 	);
 	asm("nop");
 }

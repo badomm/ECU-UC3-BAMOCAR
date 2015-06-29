@@ -121,6 +121,10 @@ Discarded input sections
  .bss           0x00000000        0x0 src/ECU_CAN/ecu_can_mob.o
  .data.msg_tx_bms
                 0x00000000       0x10 src/ECU_CAN/ecu_can_mob.o
+ .data.mob_rx_ecu
+                0x00000000        0xc src/ECU_CAN/ecu_can_mob.o
+ .data.msg_rx_ecu
+                0x00000000       0x10 src/ECU_CAN/ecu_can_mob.o
  .data.mob_tx_bms
                 0x00000000        0xc src/ECU_CAN/ecu_can_mob.o
  .text          0x00000000        0x0 src/freertos/portable/heap_1.o
@@ -1668,7 +1672,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
  .rodata.fsm_ecu_state_table
                 0x8000682c       0x18 src/statemachine/fsm_ecu.o
                 0x8000682c                fsm_ecu_state_table
- .rodata.CAN_GPIO_MAP.16006
+ .rodata.CAN_GPIO_MAP.15994
                 0x80006844       0x20 src/ECU_CAN/ecu_can.o
  .rodata.str1.4
                 0x80006864        0x5 src/freertos/tasks.o
@@ -2128,7 +2132,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
                 0x00000d58       0x20 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
 
 .debug_pubnames
-                0x00000000     0x24a5
+                0x00000000     0x24c3
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000      0x186 src/ASF/avr32/drivers/spi/spi.o
@@ -2139,84 +2143,84 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
  .debug_pubnames
                 0x0000027b      0x1ae src/ECU_CAN/ecu_can_messages.o
  .debug_pubnames
-                0x00000429       0xf0 src/ECU_CAN/ecu_can_mob.o
+                0x00000429      0x10e src/ECU_CAN/ecu_can_mob.o
  .debug_pubnames
-                0x00000519       0x64 src/freertos/portable/heap_1.o
+                0x00000537       0x64 src/freertos/portable/heap_1.o
  .debug_pubnames
-                0x0000057d      0x160 src/freertos/queue.o
+                0x0000059b      0x160 src/freertos/queue.o
  .debug_pubnames
-                0x000006dd      0x1a1 src/mcp2515/mcp2515.o
+                0x000006fb      0x1a1 src/mcp2515/mcp2515.o
  .debug_pubnames
-                0x0000087e      0x189 src/statemachine/fsm_ecu.o
+                0x0000089c      0x189 src/statemachine/fsm_ecu.o
  .debug_pubnames
-                0x00000a07      0x1a7 src/statemachine/fsm_ecu_functions.o
+                0x00000a25      0x1a7 src/statemachine/fsm_ecu_functions.o
  .debug_pubnames
-                0x00000bae       0x73 src/ASF/avr32/drivers/canif/canif.o
+                0x00000bcc       0x73 src/ASF/avr32/drivers/canif/canif.o
  .debug_pubnames
-                0x00000c21      0x3f6 src/ASF/avr32/drivers/scif/scif_uc3c.o
+                0x00000c3f      0x3f6 src/ASF/avr32/drivers/scif/scif_uc3c.o
  .debug_pubnames
-                0x00001017      0x10d src/ASF/avr32/services/network/can/can.o
+                0x00001035      0x10d src/ASF/avr32/services/network/can/can.o
  .debug_pubnames
-                0x00001124       0xf1 src/ECU_CAN/ecu_can.o
+                0x00001142       0xf1 src/ECU_CAN/ecu_can.o
  .debug_pubnames
-                0x00001215       0x71 src/freertos/list.o
+                0x00001233       0x71 src/freertos/list.o
  .debug_pubnames
-                0x00001286       0xf6 src/freertos/portable/port.o
+                0x000012a4       0xf6 src/freertos/portable/port.o
  .debug_pubnames
-                0x0000137c      0x253 src/freertos/tasks.o
+                0x0000139a      0x253 src/freertos/tasks.o
  .debug_pubnames
-                0x000015cf       0xe9 src/main.o
+                0x000015ed       0xe9 src/main.o
  .debug_pubnames
-                0x000016b8      0x79d src/ASF/avr32/drivers/flashc/flashc.o
+                0x000016d6      0x79d src/ASF/avr32/drivers/flashc/flashc.o
  .debug_pubnames
-                0x00001e55      0x3aa src/ASF/avr32/drivers/gpio/gpio.o
+                0x00001e73      0x3aa src/ASF/avr32/drivers/gpio/gpio.o
  .debug_pubnames
-                0x000021ff       0x62 src/ASF/avr32/drivers/intc/intc.o
+                0x0000221d       0x62 src/ASF/avr32/drivers/intc/intc.o
  .debug_pubnames
-                0x00002261       0xe4 src/ASF/common/services/clock/uc3c/osc.o
+                0x0000227f       0xe4 src/ASF/common/services/clock/uc3c/osc.o
  .debug_pubnames
-                0x00002345       0x46 src/ASF/common/services/clock/uc3c/pll.o
+                0x00002363       0x46 src/ASF/common/services/clock/uc3c/pll.o
  .debug_pubnames
-                0x0000238b       0xbc src/ASF/common/services/clock/uc3c/sysclk.o
+                0x000023a9       0xbc src/ASF/common/services/clock/uc3c/sysclk.o
  .debug_pubnames
-                0x00002447       0x21 src/ASF/common/boards/user_board/init.o
+                0x00002465       0x21 src/ASF/common/boards/user_board/init.o
  .debug_pubnames
-                0x00002468       0x20 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
+                0x00002486       0x20 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
  .debug_pubnames
-                0x00002488       0x1d c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
+                0x000024a6       0x1d c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
 
-.debug_info     0x00000000    0x16d60
+.debug_info     0x00000000    0x16d84
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x133f src/ASF/avr32/drivers/spi/spi.o
  .debug_info    0x0000133f      0x419 src/ASF/avr32/drivers/wdt/wdt4.o
  .debug_info    0x00001758     0x13f9 src/ASF/common/services/spi/uc3_spi/spi_master.o
  .debug_info    0x00002b51      0x579 src/ECU_CAN/ecu_can_messages.o
- .debug_info    0x000030ca      0x409 src/ECU_CAN/ecu_can_mob.o
- .debug_info    0x000034d3      0x174 src/freertos/portable/heap_1.o
- .debug_info    0x00003647      0x91b src/freertos/queue.o
- .debug_info    0x00003f62     0x1d2f src/mcp2515/mcp2515.o
- .debug_info    0x00005c91      0x7ae src/statemachine/fsm_ecu.o
- .debug_info    0x0000643f      0x947 src/statemachine/fsm_ecu_functions.o
- .debug_info    0x00006d86      0xece src/ASF/avr32/drivers/canif/canif.o
- .debug_info    0x00007c54     0x1caa src/ASF/avr32/drivers/scif/scif_uc3c.o
- .debug_info    0x000098fe     0x147f src/ASF/avr32/services/network/can/can.o
- .debug_info    0x0000ad7d      0x5ef src/ECU_CAN/ecu_can.o
- .debug_info    0x0000b36c      0x2b9 src/freertos/list.o
- .debug_info    0x0000b625       0xa6 src/freertos/portable/exception.o
- .debug_info    0x0000b6cb      0xac4 src/freertos/portable/port.o
- .debug_info    0x0000c18f      0xd42 src/freertos/tasks.o
- .debug_info    0x0000ced1     0x142f src/main.o
- .debug_info    0x0000e300     0x1cfb src/ASF/avr32/drivers/flashc/flashc.o
- .debug_info    0x0000fffb      0xf50 src/ASF/avr32/drivers/gpio/gpio.o
- .debug_info    0x00010f4b      0x836 src/ASF/avr32/drivers/intc/intc.o
- .debug_info    0x00011781       0xaa src/ASF/avr32/utils/startup/startup_uc3.o
- .debug_info    0x0001182b       0xb1 src/ASF/avr32/utils/startup/trampoline_uc3.o
- .debug_info    0x000118dc     0x1488 src/ASF/common/services/clock/uc3c/osc.o
- .debug_info    0x00012d64     0x1305 src/ASF/common/services/clock/uc3c/pll.o
- .debug_info    0x00014069     0x2607 src/ASF/common/services/clock/uc3c/sysclk.o
- .debug_info    0x00016670       0xa8 src/ASF/common/boards/user_board/init.o
- .debug_info    0x00016718      0x57b c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
- .debug_info    0x00016c93       0xcd c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
+ .debug_info    0x000030ca      0x42d src/ECU_CAN/ecu_can_mob.o
+ .debug_info    0x000034f7      0x174 src/freertos/portable/heap_1.o
+ .debug_info    0x0000366b      0x91b src/freertos/queue.o
+ .debug_info    0x00003f86     0x1d2f src/mcp2515/mcp2515.o
+ .debug_info    0x00005cb5      0x7ae src/statemachine/fsm_ecu.o
+ .debug_info    0x00006463      0x947 src/statemachine/fsm_ecu_functions.o
+ .debug_info    0x00006daa      0xece src/ASF/avr32/drivers/canif/canif.o
+ .debug_info    0x00007c78     0x1caa src/ASF/avr32/drivers/scif/scif_uc3c.o
+ .debug_info    0x00009922     0x147f src/ASF/avr32/services/network/can/can.o
+ .debug_info    0x0000ada1      0x5ef src/ECU_CAN/ecu_can.o
+ .debug_info    0x0000b390      0x2b9 src/freertos/list.o
+ .debug_info    0x0000b649       0xa6 src/freertos/portable/exception.o
+ .debug_info    0x0000b6ef      0xac4 src/freertos/portable/port.o
+ .debug_info    0x0000c1b3      0xd42 src/freertos/tasks.o
+ .debug_info    0x0000cef5     0x142f src/main.o
+ .debug_info    0x0000e324     0x1cfb src/ASF/avr32/drivers/flashc/flashc.o
+ .debug_info    0x0001001f      0xf50 src/ASF/avr32/drivers/gpio/gpio.o
+ .debug_info    0x00010f6f      0x836 src/ASF/avr32/drivers/intc/intc.o
+ .debug_info    0x000117a5       0xaa src/ASF/avr32/utils/startup/startup_uc3.o
+ .debug_info    0x0001184f       0xb1 src/ASF/avr32/utils/startup/trampoline_uc3.o
+ .debug_info    0x00011900     0x1488 src/ASF/common/services/clock/uc3c/osc.o
+ .debug_info    0x00012d88     0x1305 src/ASF/common/services/clock/uc3c/pll.o
+ .debug_info    0x0001408d     0x2607 src/ASF/common/services/clock/uc3c/sysclk.o
+ .debug_info    0x00016694       0xa8 src/ASF/common/boards/user_board/init.o
+ .debug_info    0x0001673c      0x57b c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
+ .debug_info    0x00016cb7       0xcd c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
 
 .debug_abbrev   0x00000000     0x376b
  *(.debug_abbrev)
@@ -2313,7 +2317,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
  .debug_frame   0x000020d0       0x44 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
  .debug_frame   0x00002114       0x20 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
 
-.debug_str      0x00000000     0x5ac4
+.debug_str      0x00000000     0x5ada
  *(.debug_str)
  .debug_str     0x00000000      0x614 src/ASF/avr32/drivers/spi/spi.o
                                 0x69a (size before relaxing)
@@ -2323,51 +2327,51 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
                                 0x78a (size before relaxing)
  .debug_str     0x00000a8e      0x26b src/ECU_CAN/ecu_can_messages.o
                                 0x3d6 (size before relaxing)
- .debug_str     0x00000cf9       0xa7 src/ECU_CAN/ecu_can_mob.o
-                                0x282 (size before relaxing)
- .debug_str     0x00000da0       0x9d src/freertos/portable/heap_1.o
+ .debug_str     0x00000cf9       0xbd src/ECU_CAN/ecu_can_mob.o
+                                0x298 (size before relaxing)
+ .debug_str     0x00000db6       0x9d src/freertos/portable/heap_1.o
                                 0x1a5 (size before relaxing)
- .debug_str     0x00000e3d      0x3e0 src/freertos/queue.o
+ .debug_str     0x00000e53      0x3e0 src/freertos/queue.o
                                 0x52a (size before relaxing)
- .debug_str     0x0000121d      0x703 src/mcp2515/mcp2515.o
+ .debug_str     0x00001233      0x703 src/mcp2515/mcp2515.o
                                 0xbd9 (size before relaxing)
- .debug_str     0x00001920      0x181 src/statemachine/fsm_ecu.o
+ .debug_str     0x00001936      0x181 src/statemachine/fsm_ecu.o
                                 0x58c (size before relaxing)
- .debug_str     0x00001aa1      0x210 src/statemachine/fsm_ecu_functions.o
+ .debug_str     0x00001ab7      0x210 src/statemachine/fsm_ecu_functions.o
                                 0x69a (size before relaxing)
- .debug_str     0x00001cb1      0x3e4 src/ASF/avr32/drivers/canif/canif.o
+ .debug_str     0x00001cc7      0x3e4 src/ASF/avr32/drivers/canif/canif.o
                                 0x59a (size before relaxing)
- .debug_str     0x00002095      0xa95 src/ASF/avr32/drivers/scif/scif_uc3c.o
+ .debug_str     0x000020ab      0xa95 src/ASF/avr32/drivers/scif/scif_uc3c.o
                                 0xc61 (size before relaxing)
- .debug_str     0x00002b2a      0x241 src/ASF/avr32/services/network/can/can.o
+ .debug_str     0x00002b40      0x241 src/ASF/avr32/services/network/can/can.o
                                 0x88d (size before relaxing)
- .debug_str     0x00002d6b       0x85 src/ECU_CAN/ecu_can.o
+ .debug_str     0x00002d81       0x85 src/ECU_CAN/ecu_can.o
                                 0x430 (size before relaxing)
- .debug_str     0x00002df0       0xaa src/freertos/list.o
+ .debug_str     0x00002e06       0xaa src/freertos/list.o
                                 0x249 (size before relaxing)
- .debug_str     0x00002e9a      0x4b0 src/freertos/portable/port.o
+ .debug_str     0x00002eb0      0x4b0 src/freertos/portable/port.o
                                 0x60b (size before relaxing)
- .debug_str     0x0000334a      0x606 src/freertos/tasks.o
+ .debug_str     0x00003360      0x606 src/freertos/tasks.o
                                 0x849 (size before relaxing)
- .debug_str     0x00003950      0x478 src/main.o
+ .debug_str     0x00003966      0x478 src/main.o
                                 0x956 (size before relaxing)
- .debug_str     0x00003dc8      0xaae src/ASF/avr32/drivers/flashc/flashc.o
+ .debug_str     0x00003dde      0xaae src/ASF/avr32/drivers/flashc/flashc.o
                                 0xcad (size before relaxing)
- .debug_str     0x00004876      0x579 src/ASF/avr32/drivers/gpio/gpio.o
+ .debug_str     0x0000488c      0x579 src/ASF/avr32/drivers/gpio/gpio.o
                                 0x6f4 (size before relaxing)
- .debug_str     0x00004def      0x656 src/ASF/avr32/drivers/intc/intc.o
+ .debug_str     0x00004e05      0x656 src/ASF/avr32/drivers/intc/intc.o
                                 0x774 (size before relaxing)
- .debug_str     0x00005445       0xfb src/ASF/common/services/clock/uc3c/osc.o
+ .debug_str     0x0000545b       0xfb src/ASF/common/services/clock/uc3c/osc.o
                                 0x6a7 (size before relaxing)
- .debug_str     0x00005540       0x4f src/ASF/common/services/clock/uc3c/pll.o
+ .debug_str     0x00005556       0x4f src/ASF/common/services/clock/uc3c/pll.o
                                 0x61e (size before relaxing)
- .debug_str     0x0000558f      0x348 src/ASF/common/services/clock/uc3c/sysclk.o
+ .debug_str     0x000055a5      0x348 src/ASF/common/services/clock/uc3c/sysclk.o
                                 0xcca (size before relaxing)
- .debug_str     0x000058d7       0x36 src/ASF/common/boards/user_board/init.o
+ .debug_str     0x000058ed       0x36 src/ASF/common/boards/user_board/init.o
                                 0x137 (size before relaxing)
- .debug_str     0x0000590d      0x146 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
+ .debug_str     0x00005923      0x146 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
                                 0x1fb (size before relaxing)
- .debug_str     0x00005a53       0x71 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
+ .debug_str     0x00005a69       0x71 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
                                 0x10d (size before relaxing)
 
 .debug_loc      0x00000000     0x567c
