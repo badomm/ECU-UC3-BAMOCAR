@@ -93,28 +93,16 @@ void ecu_dio_inverter_clear_error() {
 
 void get_new_data(fsm_ecu_data_t *ecu_data) {
 	uint8_t i;
-	for (i=0; i<QUEUE_INVERTER_RX_LEN; i++) {
-		if (xQueueReceive( queue_from_inverter, &ecu_data->inverter_can_msg, 0 ) == pdTRUE) {
+	while(xQueueReceive( queue_from_inverter, &ecu_data->inverter_can_msg, 0 ) == pdTRUE) {
 			handle_inverter_data(ecu_data);
-		} else {
-			break;
-		}
 	}
 	
-	for (i=0; i<QUEUE_DASH_MSG_LEN; i++) {
-		if (xQueueReceive( queue_dash_msg, &ecu_data->dash_msg, 0 ) == pdTRUE) {
+	while(xQueueReceive( queue_dash_msg, &ecu_data->dash_msg, 0 ) == pdTRUE) {
 			handle_dash_data(ecu_data);
-		} else {
-			break;
-		}
-	}
-	
-	for (i=0; i<QUEUE_BMS_RX_LEN; i++) {
-		if (xQueueReceive( queue_bms_rx, &ecu_data->bms_msg, 0 ) == pdTRUE) {
+	} 
+
+	while(xQueueReceive( queue_bms_rx, &ecu_data->bms_msg, 0 ) == pdTRUE) {
 			handle_bms_data(ecu_data);
-		} else {
-			break;
-		}
 	}
 }
 
