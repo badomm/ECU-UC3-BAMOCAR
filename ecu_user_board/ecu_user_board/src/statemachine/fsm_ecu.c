@@ -60,7 +60,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->Ki = Ki_default;
 	ecu_data->Kd = Kd_default;
 	ecu_data->d_filter_gain = D_FILTER_GAIN_DEFAULT;
-	ecu_data->inverter_timeout = 0;
 	ecu_data->lc_filter_gain = LC_FILTER_GAIN_DEFAULT;
 	ecu_data->lc_trq_init = LC_TRQ_INIT_DEFAULT;
 	ecu_data->kers_factor = 0;

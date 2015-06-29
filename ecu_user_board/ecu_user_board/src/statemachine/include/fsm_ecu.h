@@ -101,7 +101,6 @@ typedef struct fsm_ecu_data{
 	float Ki;
 	float Kd;
 	float d_filter_gain;
-	uint8_t inverter_timeout; //Not used (practically)
 	float lc_filter_gain;
 	float lc_trq_init;
 	int16_t kers_factor;

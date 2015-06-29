@@ -18,7 +18,6 @@ uint16_t calc_inverter_power(fsm_ecu_data_t *ecu_data);
 uint16_t calc_max_current_allowed(fsm_ecu_data_t* ecu_data);
 uint8_t check_bspd(void);
 uint8_t check_inverter_error(fsm_ecu_data_t *ecu_data);
-uint8_t check_inverter_timeout(fsm_ecu_data_t *ecu_data);
 uint8_t get_brake_sens(fsm_ecu_data_t *ecu_data);
 uint8_t get_trq_sens(fsm_ecu_data_t *ecu_data);
 uint16_t convert_num_to_vdc(uint32_t num);

@@ -113,13 +113,6 @@ uint8_t check_inverter_error(fsm_ecu_data_t *ecu_data) {
 	return (uint8_t)(temp & 1 << PWR_FAULT) | (temp & 1 << RFE_FAULT) | (temp & 1 << RESOLVER_FAULT);
 }
 
-uint8_t check_inverter_timeout(fsm_ecu_data_t *ecu_data) {
-	if (ecu_data->inverter_timeout == TIMER_10_HZ) {
-		return 1;
-	}
-	return 0;
-}
-
 uint8_t get_brake_sens(fsm_ecu_data_t *ecu_data) {
 	uint8_t status = 0;
 	if (xQueueReceive( queue_brake_front, &ecu_data->brake_front, 0 ) == pdFALSE) {
@@ -191,9 +184,7 @@ void get_new_data(fsm_ecu_data_t *ecu_data) {
 	for (i=0; i<QUEUE_INVERTER_RX_LEN; i++) {
 		if (xQueueReceive( queue_from_inverter, &ecu_data->inverter_can_msg, 0 ) == pdTRUE) {
 			handle_inverter_data(ecu_data);
-			ecu_data->inverter_timeout = 0;
 		} else {
-			ecu_data->inverter_timeout++;
 			break;
 		}
 	}
