@@ -63,7 +63,6 @@ typedef enum flag_drive_enable{
 
 typedef enum arctos_mode{
 	ARCTOS_MODE_NORMAL,
-	ARCTOS_MODE_TRACTION_CONTROL,
 	ARCTOS_MODE_INDOORS,
 } arctos_mode_t;
 
@@ -79,7 +78,6 @@ typedef struct fsm_ecu_data{
 	uint8_t trq_sens0_err;
 	uint8_t trq_sens1_err;
 	int16_t trq_cmd;
-	int16_t traction_control_limit;
 	float control_u;
 	float trq_pedal;
 	dash_can_msg_t dash_msg;

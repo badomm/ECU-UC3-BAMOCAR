@@ -19,7 +19,6 @@
 /* Queues for task communication */
 xQueueHandle queue_from_inverter;
 xQueueHandle queue_to_inverter;
-xQueueHandle queue_traction_control;
 xQueueHandle queue_dash_msg;
 xQueueHandle queue_trq_sens0;
 xQueueHandle queue_trq_sens1;

@@ -37,7 +37,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->trq_sens0_err = 0;
 	ecu_data->trq_sens1_err = 0;
 	ecu_data->trq_cmd = 0;
-	ecu_data->traction_control_limit = MAX_TORQUE;
 	ecu_data->control_u = 0;
 	ecu_data->dash_msg = (dash_can_msg_t){.data.u64 = 0x0LL, .id = 0};
 	ecu_data->bms_msg = (bms_can_msg_t){.data.u64 = 0x0LL, .id = 0};
