@@ -42,7 +42,6 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->flag_start_precharge = 0;
 	ecu_data->max_cell_temp = 0;
 	ecu_data->flag_drive_enable = DRIVE_DISABLED;
-	ecu_data->arctos_mode = ARCTOS_MODE_NORMAL;
 	ecu_data->inverter_error = 0;
 	ecu_data->ecu_error = 0;
 	ecu_data->reboot = 0;

@@ -58,11 +58,6 @@ typedef enum flag_drive_enable{
 	DRIVE_DISABLE_REQUEST,
 } flag_drive_enable_t;
 
-typedef enum arctos_mode{
-	ARCTOS_MODE_NORMAL,
-	ARCTOS_MODE_INDOORS,
-} arctos_mode_t;
-
 
 
 
@@ -82,7 +77,6 @@ typedef struct fsm_ecu_data{
 	uint8_t flag_start_precharge;
 	int8_t max_cell_temp;
 	flag_drive_enable_t flag_drive_enable;
-	arctos_mode_t arctos_mode;
 	uint16_t inverter_error;
 	uint16_t ecu_error;
 	uint8_t reboot;
