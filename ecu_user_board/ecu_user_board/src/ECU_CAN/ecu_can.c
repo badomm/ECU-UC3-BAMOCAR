@@ -125,6 +125,7 @@ void can_out_callback_channel1(U8 handle, U8 event){
 	}
 	//ECU
 	else if(handle == mob_rx_ecu.handle){
+			gpio_set_pin_high(LED1);
 			can_mob = &mob_rx_ecu;
 			xQueueSendToBackFromISR(queue_ecu_rx, &can_msg, NULL);
 	}		

@@ -122,7 +122,7 @@ can_mob_t mob_rx_bspd  = {
 can_msg_t msg_rx_ecu = {
 	{
 		{
-			.id			= CANR_FCN_DATA_ID | CANR_GRP_ECU_ID,
+			.id			= CANR_FCN_BOOT_ID | CANR_GRP_ECU_ID,
 			.id_mask	= 0x7F,
 		},
 	},
@@ -135,5 +135,3 @@ can_mob_t mob_rx_ecu = {
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,
 };
-
-can_mob_t mob_rx_bspd;

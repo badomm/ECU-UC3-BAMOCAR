@@ -1199,7 +1199,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
 .plt
  *(.plt)
 
-.text           0x80002004     0x4460
+.text           0x80002004     0x4468
  *(.text .stub .text.* .gnu.linkonce.t.*)
  .text.getBaudDiv
                 0x80002004       0x20 src/ASF/avr32/drivers/spi/spi.o
@@ -1449,201 +1449,201 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
                 0x800041b4      0x15c src/ASF/avr32/services/network/can/can.o
                 0x800041b4                can_init
  .text.can_out_callback_channel1
-                0x80004310       0x98 src/ECU_CAN/ecu_can.o
+                0x80004310       0xa0 src/ECU_CAN/ecu_can.o
                 0x80004310                can_out_callback_channel1
  .text.setupRxmailbox
-                0x800043a8       0x1c src/ECU_CAN/ecu_can.o
-                0x800043a8                setupRxmailbox
+                0x800043b0       0x1c src/ECU_CAN/ecu_can.o
+                0x800043b0                setupRxmailbox
  .text.can_out_callback_channel0
-                0x800043c4       0xf8 src/ECU_CAN/ecu_can.o
-                0x800043c4                can_out_callback_channel0
+                0x800043cc       0xf8 src/ECU_CAN/ecu_can.o
+                0x800043cc                can_out_callback_channel0
  .text.ecu_can_init
-                0x800044bc       0xf4 src/ECU_CAN/ecu_can.o
-                0x800044bc                ecu_can_init
+                0x800044c4       0xf4 src/ECU_CAN/ecu_can.o
+                0x800044c4                ecu_can_init
  .text.vListInitialise
-                0x800045b0       0x14 src/freertos/list.o
-                0x800045b0                vListInitialise
+                0x800045b8       0x14 src/freertos/list.o
+                0x800045b8                vListInitialise
  .text.vListInitialiseItem
-                0x800045c4        0x6 src/freertos/list.o
-                0x800045c4                vListInitialiseItem
+                0x800045cc        0x6 src/freertos/list.o
+                0x800045cc                vListInitialiseItem
  .text.vListInsertEnd
-                0x800045ca       0x1c src/freertos/list.o
-                0x800045ca                vListInsertEnd
+                0x800045d2       0x1c src/freertos/list.o
+                0x800045d2                vListInsertEnd
  .text.vListInsert
-                0x800045e6       0x34 src/freertos/list.o
-                0x800045e6                vListInsert
+                0x800045ee       0x34 src/freertos/list.o
+                0x800045ee                vListInsert
  .text.vListRemove
-                0x8000461a       0x26 src/freertos/list.o
-                0x8000461a                vListRemove
+                0x80004622       0x26 src/freertos/list.o
+                0x80004622                vListRemove
  .text.pxPortInitialiseStack
-                0x80004640       0x92 src/freertos/portable/port.o
-                0x80004640                pxPortInitialiseStack
- *fill*         0x800046d2        0x2 d703d703
+                0x80004648       0x92 src/freertos/portable/port.o
+                0x80004648                pxPortInitialiseStack
+ *fill*         0x800046da        0x2 d703d703
  .text.vPortEnterCritical
-                0x800046d4       0x10 src/freertos/portable/port.o
-                0x800046d4                vPortEnterCritical
+                0x800046dc       0x10 src/freertos/portable/port.o
+                0x800046dc                vPortEnterCritical
  .text.xPortStartScheduler
-                0x800046e4       0x58 src/freertos/portable/port.o
-                0x800046e4                xPortStartScheduler
+                0x800046ec       0x58 src/freertos/portable/port.o
+                0x800046ec                xPortStartScheduler
  .text.SCALLYield
-                0x8000473c       0x98 src/freertos/portable/port.o
-                0x8000473c                SCALLYield
+                0x80004744       0x98 src/freertos/portable/port.o
+                0x80004744                SCALLYield
  .text.prvClearCcInt
-                0x800047d4        0xa src/freertos/portable/port.o
- *fill*         0x800047de        0x2 d703d703
+                0x800047dc        0xa src/freertos/portable/port.o
+ *fill*         0x800047e6        0x2 d703d703
  .text.vPortExitCritical
-                0x800047e0       0x20 src/freertos/portable/port.o
-                0x800047e0                vPortExitCritical
- .text.vTick    0x80004800       0x84 src/freertos/portable/port.o
+                0x800047e8       0x20 src/freertos/portable/port.o
+                0x800047e8                vPortExitCritical
+ .text.vTick    0x80004808       0x84 src/freertos/portable/port.o
  .text.vTaskSuspendAll
-                0x80004884       0x10 src/freertos/tasks.o
-                0x80004884                vTaskSuspendAll
+                0x8000488c       0x10 src/freertos/tasks.o
+                0x8000488c                vTaskSuspendAll
  .text.vTaskSwitchContext
-                0x80004894       0x7c src/freertos/tasks.o
-                0x80004894                vTaskSwitchContext
+                0x8000489c       0x7c src/freertos/tasks.o
+                0x8000489c                vTaskSwitchContext
  .text.vTaskSetTimeOutState
-                0x80004910       0x18 src/freertos/tasks.o
-                0x80004910                vTaskSetTimeOutState
+                0x80004918       0x18 src/freertos/tasks.o
+                0x80004918                vTaskSetTimeOutState
  .text.vTaskMissedYield
-                0x80004928        0xc src/freertos/tasks.o
-                0x80004928                vTaskMissedYield
+                0x80004930        0xc src/freertos/tasks.o
+                0x80004930                vTaskMissedYield
  .text.xTaskCheckForTimeOut
-                0x80004934       0x70 src/freertos/tasks.o
-                0x80004934                xTaskCheckForTimeOut
+                0x8000493c       0x70 src/freertos/tasks.o
+                0x8000493c                xTaskCheckForTimeOut
  .text.xTaskGetTickCount
-                0x800049a4       0x24 src/freertos/tasks.o
-                0x800049a4                xTaskGetTickCount
+                0x800049ac       0x24 src/freertos/tasks.o
+                0x800049ac                xTaskGetTickCount
  .text.xTaskRemoveFromEventList
-                0x800049c8       0x80 src/freertos/tasks.o
-                0x800049c8                xTaskRemoveFromEventList
+                0x800049d0       0x80 src/freertos/tasks.o
+                0x800049d0                xTaskRemoveFromEventList
  .text.vTaskIncrementTick
-                0x80004a48      0x114 src/freertos/tasks.o
-                0x80004a48                vTaskIncrementTick
+                0x80004a50      0x114 src/freertos/tasks.o
+                0x80004a50                vTaskIncrementTick
  .text.xTaskResumeAll
-                0x80004b5c       0xe8 src/freertos/tasks.o
-                0x80004b5c                xTaskResumeAll
+                0x80004b64       0xe8 src/freertos/tasks.o
+                0x80004b64                xTaskResumeAll
  .text.prvAddCurrentTaskToDelayedList
-                0x80004c44       0x5c src/freertos/tasks.o
+                0x80004c4c       0x5c src/freertos/tasks.o
  .text.vTaskDelayUntil
-                0x80004ca0       0x80 src/freertos/tasks.o
-                0x80004ca0                vTaskDelayUntil
+                0x80004ca8       0x80 src/freertos/tasks.o
+                0x80004ca8                vTaskDelayUntil
  .text.vTaskPlaceOnEventList
-                0x80004d20       0x58 src/freertos/tasks.o
-                0x80004d20                vTaskPlaceOnEventList
+                0x80004d28       0x58 src/freertos/tasks.o
+                0x80004d28                vTaskPlaceOnEventList
  .text.prvIdleTask
-                0x80004d78       0x80 src/freertos/tasks.o
+                0x80004d80       0x80 src/freertos/tasks.o
  .text.xTaskGenericCreate
-                0x80004df8      0x1e4 src/freertos/tasks.o
-                0x80004df8                xTaskGenericCreate
+                0x80004e00      0x1e4 src/freertos/tasks.o
+                0x80004e00                xTaskGenericCreate
  .text.vTaskStartScheduler
-                0x80004fdc       0x4c src/freertos/tasks.o
-                0x80004fdc                vTaskStartScheduler
+                0x80004fe4       0x4c src/freertos/tasks.o
+                0x80004fe4                vTaskStartScheduler
  .text.get_and_send_periodic_data
-                0x80005028       0xa4 src/main.o
-                0x80005028                get_and_send_periodic_data
+                0x80005030       0xa4 src/main.o
+                0x80005030                get_and_send_periodic_data
  .text.wdt_scheduler
-                0x800050cc       0x7c src/main.o
-                0x800050cc                wdt_scheduler
- .text.main     0x80005148      0x124 src/main.o
-                0x80005148                main
+                0x800050d4       0x7c src/main.o
+                0x800050d4                wdt_scheduler
+ .text.main     0x80005150      0x124 src/main.o
+                0x80005150                main
  .text.task_watchdog
-                0x8000526c       0xb8 src/main.o
+                0x80005274       0xb8 src/main.o
  .text.task_spi_can
-                0x80005324      0x168 src/main.o
+                0x8000532c      0x168 src/main.o
  .text.task_main
-                0x8000548c       0x80 src/main.o
+                0x80005494       0x80 src/main.o
  .text.flashc_set_wait_state
-                0x8000550c        0xe src/ASF/avr32/drivers/flashc/flashc.o
-                0x8000550c                flashc_set_wait_state
- *fill*         0x8000551a        0x2 d703d703
+                0x80005514        0xe src/ASF/avr32/drivers/flashc/flashc.o
+                0x80005514                flashc_set_wait_state
+ *fill*         0x80005522        0x2 d703d703
  .text.flashc_set_bus_freq
-                0x8000551c       0x24 src/ASF/avr32/drivers/flashc/flashc.o
-                0x8000551c                flashc_set_bus_freq
+                0x80005524       0x24 src/ASF/avr32/drivers/flashc/flashc.o
+                0x80005524                flashc_set_bus_freq
  .text.gpio_enable_module_pin
-                0x80005540       0x94 src/ASF/avr32/drivers/gpio/gpio.o
-                0x80005540                gpio_enable_module_pin
+                0x80005548       0x94 src/ASF/avr32/drivers/gpio/gpio.o
+                0x80005548                gpio_enable_module_pin
  .text.gpio_enable_module
-                0x800055d4       0x30 src/ASF/avr32/drivers/gpio/gpio.o
-                0x800055d4                gpio_enable_module
+                0x800055dc       0x30 src/ASF/avr32/drivers/gpio/gpio.o
+                0x800055dc                gpio_enable_module
  .text.gpio_configure_pin
-                0x80005604      0x130 src/ASF/avr32/drivers/gpio/gpio.o
-                0x80005604                gpio_configure_pin
+                0x8000560c      0x130 src/ASF/avr32/drivers/gpio/gpio.o
+                0x8000560c                gpio_configure_pin
  .text.gpio_get_pin_value
-                0x80005734       0x16 src/ASF/avr32/drivers/gpio/gpio.o
-                0x80005734                gpio_get_pin_value
+                0x8000573c       0x16 src/ASF/avr32/drivers/gpio/gpio.o
+                0x8000573c                gpio_get_pin_value
  .text.gpio_set_pin_high
-                0x8000574a       0x16 src/ASF/avr32/drivers/gpio/gpio.o
-                0x8000574a                gpio_set_pin_high
+                0x80005752       0x16 src/ASF/avr32/drivers/gpio/gpio.o
+                0x80005752                gpio_set_pin_high
  .text.gpio_set_pin_low
-                0x80005760       0x16 src/ASF/avr32/drivers/gpio/gpio.o
-                0x80005760                gpio_set_pin_low
+                0x80005768       0x16 src/ASF/avr32/drivers/gpio/gpio.o
+                0x80005768                gpio_set_pin_low
  .text.gpio_toggle_pin
-                0x80005776       0x16 src/ASF/avr32/drivers/gpio/gpio.o
-                0x80005776                gpio_toggle_pin
+                0x8000577e       0x16 src/ASF/avr32/drivers/gpio/gpio.o
+                0x8000577e                gpio_toggle_pin
  .text._unhandled_interrupt
-                0x8000578c        0x2 src/ASF/avr32/drivers/intc/intc.o
- *fill*         0x8000578e        0x2 d703d703
+                0x80005794        0x2 src/ASF/avr32/drivers/intc/intc.o
+ *fill*         0x80005796        0x2 d703d703
  .text.INTC_register_interrupt
-                0x80005790       0x80 src/ASF/avr32/drivers/intc/intc.o
-                0x80005790                INTC_register_interrupt
+                0x80005798       0x80 src/ASF/avr32/drivers/intc/intc.o
+                0x80005798                INTC_register_interrupt
  .text.INTC_init_interrupts
-                0x80005810       0x54 src/ASF/avr32/drivers/intc/intc.o
-                0x80005810                INTC_init_interrupts
+                0x80005818       0x54 src/ASF/avr32/drivers/intc/intc.o
+                0x80005818                INTC_init_interrupts
  .text._get_interrupt_handler
-                0x80005864       0x38 src/ASF/avr32/drivers/intc/intc.o
-                0x80005864                _get_interrupt_handler
- .text._stext   0x8000589c       0x40 src/ASF/avr32/utils/startup/startup_uc3.o
+                0x8000586c       0x38 src/ASF/avr32/drivers/intc/intc.o
+                0x8000586c                _get_interrupt_handler
+ .text._stext   0x800058a4       0x40 src/ASF/avr32/utils/startup/startup_uc3.o
                                  0x50 (size before relaxing)
-                0x8000589c                _stext
+                0x800058a4                _stext
  .text.osc_priv_enable_rc120m
-                0x800058dc       0x24 src/ASF/common/services/clock/uc3c/osc.o
-                0x800058dc                osc_priv_enable_rc120m
+                0x800058e4       0x24 src/ASF/common/services/clock/uc3c/osc.o
+                0x800058e4                osc_priv_enable_rc120m
  .text.osc_priv_enable_rc8m
-                0x80005900       0x40 src/ASF/common/services/clock/uc3c/osc.o
-                0x80005900                osc_priv_enable_rc8m
+                0x80005908       0x40 src/ASF/common/services/clock/uc3c/osc.o
+                0x80005908                osc_priv_enable_rc8m
  .text.osc_priv_enable_osc32
-                0x80005940       0x26 src/ASF/common/services/clock/uc3c/osc.o
-                0x80005940                osc_priv_enable_osc32
+                0x80005948       0x26 src/ASF/common/services/clock/uc3c/osc.o
+                0x80005948                osc_priv_enable_osc32
  .text.osc_priv_enable_osc0
-                0x80005966       0x24 src/ASF/common/services/clock/uc3c/osc.o
-                0x80005966                osc_priv_enable_osc0
+                0x8000596e       0x24 src/ASF/common/services/clock/uc3c/osc.o
+                0x8000596e                osc_priv_enable_osc0
  .text.pll_enable
-                0x8000598a       0x2a src/ASF/common/services/clock/uc3c/pll.o
-                0x8000598a                pll_enable
+                0x80005992       0x2a src/ASF/common/services/clock/uc3c/pll.o
+                0x80005992                pll_enable
  .text.osc_enable
-                0x800059b4       0x50 src/ASF/common/services/clock/uc3c/sysclk.o
+                0x800059bc       0x50 src/ASF/common/services/clock/uc3c/sysclk.o
  .text.sysclk_set_source
-                0x80005a04       0x20 src/ASF/common/services/clock/uc3c/sysclk.o
-                0x80005a04                sysclk_set_source
+                0x80005a0c       0x20 src/ASF/common/services/clock/uc3c/sysclk.o
+                0x80005a0c                sysclk_set_source
  .text.sysclk_set_prescalers
-                0x80005a24       0x6c src/ASF/common/services/clock/uc3c/sysclk.o
-                0x80005a24                sysclk_set_prescalers
+                0x80005a2c       0x6c src/ASF/common/services/clock/uc3c/sysclk.o
+                0x80005a2c                sysclk_set_prescalers
  .text.sysclk_priv_enable_module
-                0x80005a90       0x3a src/ASF/common/services/clock/uc3c/sysclk.o
-                0x80005a90                sysclk_priv_enable_module
- *fill*         0x80005aca        0x2 d703d703
+                0x80005a98       0x3a src/ASF/common/services/clock/uc3c/sysclk.o
+                0x80005a98                sysclk_priv_enable_module
+ *fill*         0x80005ad2        0x2 d703d703
  .text.sysclk_init
-                0x80005acc       0x98 src/ASF/common/services/clock/uc3c/sysclk.o
-                0x80005acc                sysclk_init
+                0x80005ad4       0x98 src/ASF/common/services/clock/uc3c/sysclk.o
+                0x80005ad4                sysclk_init
  .text.board_init
-                0x80005b64       0x9c src/ASF/common/boards/user_board/init.o
-                0x80005b64                board_init
- .text          0x80005c00       0xe8 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_s32_to_f64.o)
-                0x80005c00                __avr32_u32_to_f64
-                0x80005c08                __avr32_s32_to_f64
- .text          0x80005ce8      0x318 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_div.o)
-                0x80005ce8                __avr32_f64_div
- .text          0x80006000       0x8a c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_to_f32.o)
-                0x80006000                __avr32_f64_to_f32
- .text          0x8000608a      0x264 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
-                0x8000608a                __avr32_udiv64
-                0x8000608a                __udivdi3
- .text          0x800062ee      0x148 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memcpy.o)
-                0x800062ee                memcpy
- .text.memset   0x80006436        0xe c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
-                0x80006436                memset
- .text          0x80006444       0x20 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-strncpy.o)
-                0x80006444                strncpy
+                0x80005b6c       0x9c src/ASF/common/boards/user_board/init.o
+                0x80005b6c                board_init
+ .text          0x80005c08       0xe8 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_s32_to_f64.o)
+                0x80005c08                __avr32_u32_to_f64
+                0x80005c10                __avr32_s32_to_f64
+ .text          0x80005cf0      0x318 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_div.o)
+                0x80005cf0                __avr32_f64_div
+ .text          0x80006008       0x8a c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_to_f32.o)
+                0x80006008                __avr32_f64_to_f32
+ .text          0x80006092      0x264 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
+                0x80006092                __avr32_udiv64
+                0x80006092                __udivdi3
+ .text          0x800062f6      0x148 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memcpy.o)
+                0x800062f6                memcpy
+ .text.memset   0x8000643e        0xe c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
+                0x8000643e                memset
+ .text          0x8000644c       0x20 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-strncpy.o)
+                0x8000644c                strncpy
  *(.text.*personality*)
  *(.gnu.warning)
 
@@ -2256,7 +2256,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
  .debug_abbrev  0x000035b9      0x15a c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
  .debug_abbrev  0x00003713       0x85 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
 
-.debug_line     0x00000000    0x10e99
+.debug_line     0x00000000    0x10e9a
  *(.debug_line)
  .debug_line    0x00000000      0x9dc src/ASF/avr32/drivers/spi/spi.o
  .debug_line    0x000009dc      0x872 src/ASF/avr32/drivers/wdt/wdt4.o
@@ -2271,23 +2271,23 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
  .debug_line    0x00006ee1      0x7a5 src/ASF/avr32/drivers/canif/canif.o
  .debug_line    0x00007686      0xac8 src/ASF/avr32/drivers/scif/scif_uc3c.o
  .debug_line    0x0000814e      0xb24 src/ASF/avr32/services/network/can/can.o
- .debug_line    0x00008c72      0xc07 src/ECU_CAN/ecu_can.o
- .debug_line    0x00009879      0x8a0 src/freertos/list.o
- .debug_line    0x0000a119       0xda src/freertos/portable/exception.o
- .debug_line    0x0000a1f3      0x973 src/freertos/portable/port.o
- .debug_line    0x0000ab66      0xbd0 src/freertos/tasks.o
- .debug_line    0x0000b736      0xcb1 src/main.o
- .debug_line    0x0000c3e7      0xcdf src/ASF/avr32/drivers/flashc/flashc.o
- .debug_line    0x0000d0c6      0xa22 src/ASF/avr32/drivers/gpio/gpio.o
- .debug_line    0x0000dae8      0x779 src/ASF/avr32/drivers/intc/intc.o
- .debug_line    0x0000e261       0xf2 src/ASF/avr32/utils/startup/startup_uc3.o
- .debug_line    0x0000e353       0x67 src/ASF/avr32/utils/startup/trampoline_uc3.o
- .debug_line    0x0000e3ba      0x948 src/ASF/common/services/clock/uc3c/osc.o
- .debug_line    0x0000ed02      0x87c src/ASF/common/services/clock/uc3c/pll.o
- .debug_line    0x0000f57e      0x9e7 src/ASF/common/services/clock/uc3c/sysclk.o
- .debug_line    0x0000ff65      0xbaa src/ASF/common/boards/user_board/init.o
- .debug_line    0x00010b0f      0x1d1 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
- .debug_line    0x00010ce0      0x1b9 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
+ .debug_line    0x00008c72      0xc08 src/ECU_CAN/ecu_can.o
+ .debug_line    0x0000987a      0x8a0 src/freertos/list.o
+ .debug_line    0x0000a11a       0xda src/freertos/portable/exception.o
+ .debug_line    0x0000a1f4      0x973 src/freertos/portable/port.o
+ .debug_line    0x0000ab67      0xbd0 src/freertos/tasks.o
+ .debug_line    0x0000b737      0xcb1 src/main.o
+ .debug_line    0x0000c3e8      0xcdf src/ASF/avr32/drivers/flashc/flashc.o
+ .debug_line    0x0000d0c7      0xa22 src/ASF/avr32/drivers/gpio/gpio.o
+ .debug_line    0x0000dae9      0x779 src/ASF/avr32/drivers/intc/intc.o
+ .debug_line    0x0000e262       0xf2 src/ASF/avr32/utils/startup/startup_uc3.o
+ .debug_line    0x0000e354       0x67 src/ASF/avr32/utils/startup/trampoline_uc3.o
+ .debug_line    0x0000e3bb      0x948 src/ASF/common/services/clock/uc3c/osc.o
+ .debug_line    0x0000ed03      0x87c src/ASF/common/services/clock/uc3c/pll.o
+ .debug_line    0x0000f57f      0x9e7 src/ASF/common/services/clock/uc3c/sysclk.o
+ .debug_line    0x0000ff66      0xbaa src/ASF/common/boards/user_board/init.o
+ .debug_line    0x00010b10      0x1d1 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_udivdi3.o)
+ .debug_line    0x00010ce1      0x1b9 c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libc.a(lib_a-memset.o)
 
 .debug_frame    0x00000000     0x2168
  *(.debug_frame)
