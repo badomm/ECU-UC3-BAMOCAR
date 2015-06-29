@@ -176,13 +176,10 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_CHARGED;
 	uint8_t no_trq_sens = 0;
-	uint8_t no_speed_sens = 0;
 
 	get_new_data(ecu_data);
 	no_trq_sens	  = get_trq_sens(ecu_data);
-	no_speed_sens = get_speed_sens(ecu_data);
 	get_brake_sens(ecu_data);
-	no_speed_sens = 0;
 	
 	if (ecu_data->inverter_vdc < 50) {
 		gpio_set_pin_low(FRG_PIN);
@@ -200,10 +197,6 @@ fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 		}
 		if (no_trq_sens) {
 			ecu_data->ecu_error |= (1 << ERR_TRQ_SENSORS);
-			next_state = STATE_ERROR;
-		}
-		if (no_speed_sens) {
-			ecu_data->ecu_error |= (1 << ERR_SPEED_SENSORS);
 			next_state = STATE_ERROR;
 		}
 		if (ecu_data->brake_front == 0) {
@@ -303,7 +296,6 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	
 	get_new_data(ecu_data);
 	get_trq_sens(ecu_data);
-	get_speed_sens(ecu_data);
 	get_brake_sens(ecu_data);
 	
 	if (ecu_data->flag_drive_enable == DRIVE_DISABLE_REQUEST) {

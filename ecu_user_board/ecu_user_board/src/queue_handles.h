@@ -19,10 +19,6 @@
 /* Queues for task communication */
 xQueueHandle queue_from_inverter;
 xQueueHandle queue_to_inverter;
-xQueueHandle queue_wheel_fl;
-xQueueHandle queue_wheel_fr;
-xQueueHandle queue_wheel_rl;
-xQueueHandle queue_wheel_rr;
 xQueueHandle queue_traction_control;
 xQueueHandle queue_dash_msg;
 xQueueHandle queue_trq_sens0;

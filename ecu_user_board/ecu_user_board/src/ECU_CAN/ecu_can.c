@@ -55,10 +55,6 @@ void ecu_can_init(void) {
 	INTC_init_interrupts();
 	
 	/* Allocate channel message box */
-	mob_rx_speed_sens_fl.handle	= 0;
-	mob_rx_speed_sens_fr.handle	= 1;
-	mob_rx_speed_sens_rl.handle	= 2;
-	mob_rx_speed_sens_rr.handle	= 3;
 	mob_tx_dash.handle			= 5;
 	mob_rx_trq_sens0.handle		= 6;
 	mob_rx_trq_sens1.handle     = 7;
@@ -75,37 +71,7 @@ void ecu_can_init(void) {
 	can_init(CAN_BUS_1, ((uint32_t)&mob_ram_ch1[0]), CANIF_CHANNEL_MODE_NORMAL,	can_out_callback_channel1);
 	
 	
-	/* Prepare for message reception */	
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_speed_sens_fl.handle
-		, mob_rx_speed_sens_fl.req_type
-		, mob_rx_speed_sens_fl.can_msg
-	);
-	
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_speed_sens_fr.handle
-		, mob_rx_speed_sens_fr.req_type
-		, mob_rx_speed_sens_fr.can_msg
-	);
-	
-	
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_speed_sens_rl.handle
-		, mob_rx_speed_sens_rl.req_type
-		, mob_rx_speed_sens_rl.can_msg
-	);
-	
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_speed_sens_rr.handle
-		, mob_rx_speed_sens_rr.req_type
-		, mob_rx_speed_sens_rr.can_msg
-	);
-	
-	
+	/* Prepare for message reception */		
 	can_rx(
 		CAN_BUS_0
 		, mob_rx_dash_data.handle
@@ -208,72 +174,7 @@ void can_out_callback_channel0(U8 handle, U8 event){
 
 /* Call Back called by can_drv, channel 1 */
 void can_out_callback_channel1(U8 handle, U8 event){
-	if (handle == mob_rx_speed_sens_fl.handle) {
-		mob_rx_speed_sens_fl.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_speed_sens_fl.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_speed_sens_fl.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_speed_sens_fl.status				= event;
-		
-		xQueueOverwriteFromISR(queue_wheel_fl, &mob_rx_speed_sens_fl.can_msg->data.u16[0], NULL);
-		/* Empty message field */
-		mob_rx_speed_sens_fl.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1,
-		mob_rx_speed_sens_fl.handle,
-		mob_rx_speed_sens_fl.req_type,
-		mob_rx_speed_sens_fl.can_msg);
-		
-	} else if (handle == mob_rx_speed_sens_fr.handle) {
-		mob_rx_speed_sens_fr.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_speed_sens_fr.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_speed_sens_fr.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_speed_sens_fr.status				= event;
-		
-		xQueueOverwriteFromISR(queue_wheel_fr, &mob_rx_speed_sens_fr.can_msg->data.u16[0], NULL);
-		/* Empty message field */
-		mob_rx_speed_sens_fr.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1,
-		mob_rx_speed_sens_fr.handle,
-		mob_rx_speed_sens_fr.req_type,
-		mob_rx_speed_sens_fr.can_msg);
-	} else if (handle == mob_rx_speed_sens_rl.handle) {
-		mob_rx_speed_sens_rl.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_speed_sens_rl.can_msg->id			= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_speed_sens_rl.dlc					= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_speed_sens_rl.status				= event;
-
-		xQueueOverwriteFromISR(queue_wheel_rl, &mob_rx_speed_sens_rl.can_msg->data.u16[0], NULL);
-	
-		/* Empty message field */
-		mob_rx_speed_sens_rl.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1, 
-		mob_rx_speed_sens_rl.handle,
-		mob_rx_speed_sens_rl.req_type,
-		mob_rx_speed_sens_rl.can_msg);
-		
-	} else if (handle == mob_rx_speed_sens_rr.handle) {
-		mob_rx_speed_sens_rr.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_speed_sens_rr.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_speed_sens_rr.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_speed_sens_rr.status				= event;
-
-		xQueueOverwriteFromISR(queue_wheel_rr, &mob_rx_speed_sens_rr.can_msg->data.u16[0], NULL);
-		
-		/* Empty message field */
-		mob_rx_speed_sens_rr.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1,
-		mob_rx_speed_sens_rr.handle,
-		mob_rx_speed_sens_rr.req_type,
-		mob_rx_speed_sens_rr.can_msg);
-	
-	}	else if (handle == mob_rx_trq_sens1.handle) {
+	if (handle == mob_rx_trq_sens1.handle) {
 		mob_rx_trq_sens1.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
 		mob_rx_trq_sens1.can_msg->id			= can_get_mob_id(CAN_BUS_1, handle);
 		mob_rx_trq_sens1.dlc					= can_get_mob_dlc(CAN_BUS_1, handle);

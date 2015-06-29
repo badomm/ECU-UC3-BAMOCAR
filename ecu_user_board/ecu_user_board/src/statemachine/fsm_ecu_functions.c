@@ -131,23 +131,7 @@ uint8_t get_brake_sens(fsm_ecu_data_t *ecu_data) {
 	return status;
 }
 
-uint8_t get_speed_sens(fsm_ecu_data_t *ecu_data) {
-	uint8_t status=0;
-	if (xQueueReceive( queue_wheel_fl, &ecu_data->WFL_sens, 0 ) == pdFALSE) {
-		status++;
-	}
-	if (xQueueReceive( queue_wheel_fr, &ecu_data->WFR_sens, 0 ) == pdFALSE) {
-		status++;
-	}
-	if (xQueueReceive( queue_wheel_rl, &ecu_data->WRL_sens, 0 ) == pdFALSE) {
-		status++;
-	}
-	if (xQueueReceive( queue_wheel_rr, &ecu_data->WRR_sens, 0 ) == pdFALSE) {
-		status++;
-	}
-	asm("nop");
-	return status;
-}
+
 
 uint8_t get_trq_sens(fsm_ecu_data_t *ecu_data) {
 	uint8_t status = 0;

@@ -153,7 +153,7 @@ void ecu_can_send_drive_disabled(void) {
 }
 
 void ecu_can_send_alive() {
-	mob_tx_dash.can_msg->data.u8[0]  = ALIVE_ECU;	
+	mob_tx_dash.can_msg->data.u8[0]  = ALIVE_INVERTER;	
 	mob_tx_dash.can_msg->id = CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID;
 	mob_tx_dash.dlc = CANR_ALIVE_MSG_DLC;
 	can_tx(CAN_BUS_0, mob_tx_dash.handle, mob_tx_dash.dlc, CAN_DATA_FRAME,mob_tx_dash.can_msg);
