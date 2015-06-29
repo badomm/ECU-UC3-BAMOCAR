@@ -20,7 +20,7 @@
 #define BRAKE_TRESHOLD				5000
 #define MAX_KERS					(int16_t)-3277
 
-float slip_target[] = {0, 0.10, 0.15, 0.20, 0.25};
+
 
 
 bool brake_over_travel_check (fsm_ecu_data_t* ecu_data) {
@@ -73,7 +73,7 @@ uint16_t calc_inverter_power(fsm_ecu_data_t *ecu_data) {
 }
 
 int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
-	float speed = ecu_data->WRR_sens & 0xFF;
+	float speed = 0;//ecu_data->WRR_sens & 0xFF; //
 	speed = speed*2.574;
 	static bool allow_kers = false;
 	
@@ -262,7 +262,6 @@ void handle_dash_data(fsm_ecu_data_t *ecu_data) {
 		ecu_data->kers_factor = ecu_data->dash_msg.data.s16[1];
 		slip_index = ecu_data->dash_msg.data.u16[2];
 		slip_index = min(slip_index, 5);
-		ecu_data->slip_target = slip_target[slip_index-1];
 
 		if (start == 0) {
 			ecu_data->flag_drive_enable = DRIVE_DISABLE_REQUEST;
@@ -346,28 +345,6 @@ void handle_inverter_data(fsm_ecu_data_t *ecu_data) {
 			break;
 		default:
 			break;
-	}
-}
-
-void map_pedal(fsm_ecu_data_t *ecu_data) {
-	// Torque sensors = <0,1000>
-	static float pedal_filter = 0.0F;
-	float config_max_trq = (float)ecu_data->config_max_trq / 100.0;
-	
-	int16_t trq_sens = (int16_t)min(ecu_data->trq_sens0, ecu_data->trq_sens1);
-	if (trq_sens > 150) { 
-		// Handle values below 0
-		trq_sens = max(0, trq_sens);
-		// Handle values above 1000
-		trq_sens = min(trq_sens, 1000);
-		
-		float pedal = (float)MAX_TORQUE*(float)trq_sens*(float)trq_sens*config_max_trq/1000000.0;
-		//float pedal = (float)MAX_TORQUE*(float)trq_sens*config_max_trq/1000.0; //Linear curve
-		pedal_filter = (1-PEDAL_FILTER_GAIN)*pedal_filter + PEDAL_FILTER_GAIN*pedal;
-		
-		ecu_data->trq_pedal = min(pedal_filter, pedal); //Selects filter when input increases, pedal when decreases
-	} else {
-		ecu_data->trq_pedal = 0;
 	}
 }
 
