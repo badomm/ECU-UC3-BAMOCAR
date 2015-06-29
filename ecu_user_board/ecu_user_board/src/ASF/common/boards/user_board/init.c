@@ -45,7 +45,7 @@ void board_init(void)
 	
 	gpio_configure_pin(INT1, GPIO_DIR_INPUT| GPIO_PULL_UP); 
 	
-	ecu_can_init();
+
 	
 	Enable_global_interrupt();
 	

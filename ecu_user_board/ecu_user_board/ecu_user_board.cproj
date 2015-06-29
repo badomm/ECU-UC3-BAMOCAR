@@ -113,12 +113,12 @@
     <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>1</eraseonlaunchrule>
-    <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
+    <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
     <com_atmel_avrdbg_tool_jtagice3plus>
       <ToolOptions>
         <InterfaceProperties>
           <JtagEnableExtResetOnStartSession>true</JtagEnableExtResetOnStartSession>
-          <JtagDbgClock>7500000</JtagDbgClock>
+          <JtagDbgClock>0</JtagDbgClock>
           <JtagInChain>false</JtagInChain>
           <JtagDevicesBefore>0</JtagDevicesBefore>
           <JtagDevicesAfter>0</JtagDevicesAfter>
@@ -134,6 +134,17 @@
     </com_atmel_avrdbg_tool_jtagice3plus>
     <avrtoolinterface>JTAG</avrtoolinterface>
     <preserveEEPROM>true</preserveEEPROM>
+    <com_atmel_avrdbg_tool_atmelice>
+      <ToolOptions>
+        <InterfaceProperties>
+          <JtagDbgClock>7500000</JtagDbgClock>
+        </InterfaceProperties>
+        <InterfaceName>JTAG</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.atmelice</ToolType>
+      <ToolNumber>J41800021087</ToolNumber>
+      <ToolName>Atmel-ICE</ToolName>
+    </com_atmel_avrdbg_tool_atmelice>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>

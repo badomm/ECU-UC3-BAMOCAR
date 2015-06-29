@@ -57,6 +57,7 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 
 int main(void){	
 	board_init();
+	ecu_can_init();
 	spi_init_pins();
 	mcp2515_spiModule = spi_init_module();
 	queue_from_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN, sizeof(inverter_can_msg_t));
@@ -65,32 +66,9 @@ int main(void){
 	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(bms_can_msg_t));
 	queue_bspd			= xQueueCreate(1, sizeof(uint8_t));
 	
-	xTaskCreate(
-		task_main
-		, (signed portCHAR *) "Main ECU"
-		, configMINIMAL_STACK_SIZE
-		, (void *) &task_check_alive[0]
-		, TASK_MAIN_PRIORITY
-		, (xTaskHandle *) &task_handles[0]
-	);
-	
- 	xTaskCreate(
- 		task_spi_can
- 		, (signed portCHAR *) "CAN3 SPI"
- 		, configMINIMAL_STACK_SIZE
- 		, (void *) &task_check_alive[1]
- 		, TASK_SPI_CAN_PRIORITY
- 		, (xTaskHandle *) &task_handles[1]
- 	);
-	 	 
-	xTaskCreate(
-	 	task_watchdog
-	 	, (signed portCHAR *) "Watchdog"
-	 	, configMINIMAL_STACK_SIZE
-	 	, NULL
-	 	, TASK_WATCHDOG_PRIORITY
-	 	, NULL
-	);
+	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);
+ 	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
+	xTaskCreate(task_watchdog, (signed portCHAR *) "Watchdog", configMINIMAL_STACK_SIZE, NULL, TASK_WATCHDOG_PRIORITY, NULL);
 		
 	#ifdef USE_WDT
 		wdt_scheduler();
@@ -251,10 +229,8 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 		ecu_can_send_inverter_status(ecu_data->inverter_vdc, ecu_data->ecu_error, ecu_data->rpm, ecu_data->trq_cmd);
 	}
 	
-	if ((data_timer % TIMER_2_HZ) == 0) {
-		if (ecu_data->state == STATE_ERROR) {
+	if ((data_timer % TIMER_1_HZ) == 0) {
 			ecu_can_send_alive();
-		}
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
