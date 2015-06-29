@@ -14,22 +14,14 @@
 #include "fsm_ecu.h"
 #include "fsm_ecu_functions.h"
 
+
 #define BMS_PRECHARGE_BIT			3
 #define MAX_KERS					(int16_t)-3277
 
+#define TRQ_TIMEOUT  5;
+static int torqueRequestTimeout;
 
-uint16_t calc_bms_power(fsm_ecu_data_t *ecu_data) {
-	int16_t current = ecu_data->bms_current;
-	int16_t voltage = ecu_data->vdc_battery;
-	return (uint16_t)(voltage*current);
-}
 
-uint16_t calc_inverter_power(fsm_ecu_data_t *ecu_data) {
-	uint16_t rpm = ecu_data->rpm;
-	uint16_t trq = (uint16_t)ecu_data->trq_cmd*180/MAX_TORQUE;//180Nm
-	uint32_t power = trq*rpm*628/(100*60*1000); //In kW
-	return (uint16_t)power; //Such number
-}
 
 int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
 	float speed = 0;//ecu_data->WRR_sens & 0xFF; //
@@ -52,18 +44,7 @@ int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
 	return 1;
 }
 
-uint16_t calc_max_current_allowed(fsm_ecu_data_t* ecu_data) {
-	if (!(ecu_data->vdc_battery == 0)) {
-		return (82500 / ecu_data->vdc_battery);	
-	}
-	return 0;
-}
 
-uint8_t check_bspd(void) {
-	uint8_t temp=0;
-	xQueueReceive(queue_bspd, &temp, 0);
-	return temp;
-}
 
 uint8_t check_inverter_error(fsm_ecu_data_t *ecu_data) {
 	uint16_t temp = ecu_data->inverter_error;
@@ -91,83 +72,8 @@ void ecu_dio_inverter_clear_error() {
 	gpio_set_pin_low(INVERTER_DIN1);
 }
 
-void get_new_data(fsm_ecu_data_t *ecu_data) {
-	uint8_t i;
-	while(xQueueReceive( queue_from_inverter, &ecu_data->inverter_can_msg, 0 ) == pdTRUE) {
-			handle_inverter_data(ecu_data);
-	}
-	
-	while(xQueueReceive( queue_dash_msg, &ecu_data->dash_msg, 0 ) == pdTRUE) {
-			handle_dash_data(ecu_data);
-	} 
 
-	while(xQueueReceive( queue_bms_rx, &ecu_data->bms_msg, 0 ) == pdTRUE) {
-			handle_bms_data(ecu_data);
-	}
-}
-
-void handle_bms_data(fsm_ecu_data_t *ecu_data) {
-	/* Max period 300 ms, contactor req, battery current input msg */
-	switch (ecu_data->bms_msg.id) {
-		case (BMS_PRECHARGE_ID):
-		if ((ecu_data->bms_msg.data.u8[3] & (1 << BMS_PRECHARGE_BIT)) != 0) {
-			/* There is a hardwire contactor request */
-			ecu_data->flag_start_precharge = 1;
-		} else {
-			ecu_data->flag_start_precharge = 0;
-		}
-		break;
-		case (BMS_BATT_VOLT_ID):
-		ecu_data->vdc_battery = ecu_data->bms_msg.data.u16[0];
-		break;
-		case (BMS_BATT_TEMP_ID):
-		ecu_data->max_cell_temp = ecu_data->bms_msg.data.s8[4];
-		break;
-		
-		case (0x42B):
-		ecu_data->bms_current = ecu_data->bms_msg.data.s16[0];
-		break;
-		
-		default:
-		break;
-	}
-}
-
-void handle_dash_data(fsm_ecu_data_t *ecu_data) {
-	uint8_t rtds_plays;
-	uint8_t start;
-	uint8_t lc_filter_time;
-	uint8_t state_of_lc = 0;
-
-	switch (ecu_data->dash_msg.id) {
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID0_ID):
-		rtds_plays = ecu_data->dash_msg.data.u8[0];
-		if (rtds_plays == 1) {
-			ecu_data->flag_drive_enable = DRIVE_ENABLE_RTDS_PLAYS;
-		}
-		break;
-		
-		case (CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID3_ID):
-		//Only permit if ECU in error
-		if (ecu_data->state == STATE_ERROR) {
-			if (ecu_data->dash_msg.data.u8[1]==1) {// Message also contains the current driver
-				ecu_data->reboot = 1;
-			}
-		}
-		asm("nop");
-		break;
-		
-		case (CANR_FCN_PRI_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID3_ID):
-		ecu_data->config_max_trq = ecu_data->dash_msg.data.u8[1];
-		break;
-		
-		
-		default:
-		break;
-	}
-}
-
-void handle_inverter_data(fsm_ecu_data_t *ecu_data) {
+void handle_inverter_data(fsm_ecu_data_t *ecu_data, inverter_can_msg_t inverter_can_msg) {
 	/* Note on receiving inverter data
 	 * Most data is 4 byte long, but e.g. error and state
 	 * register will produce a 6 byte message.
@@ -177,22 +83,22 @@ void handle_inverter_data(fsm_ecu_data_t *ecu_data) {
 	 * Temp e.g.: 49d62a00 
 	 */
 	uint16_t temp;
-	switch (ecu_data->inverter_can_msg.data.u8[0]) {
+	switch (inverter_can_msg.data.u8[0]) {
 		case BTB_REG:
 			break;
 		case FRG_REG:
 			break;
 		case MOTOR_TEMP_REG:
-			ecu_data->motor_temp = convert_to_big_endian(ecu_data->inverter_can_msg.data.u32[0]);
+			ecu_data->motor_temp = convert_to_big_endian(inverter_can_msg.data.u32[0]);
 			break;
 		case IGBT_TEMP_REG:
-			ecu_data->inverter_temp = convert_to_big_endian(ecu_data->inverter_can_msg.data.u32[0]);
+			ecu_data->inverter_temp = convert_to_big_endian(inverter_can_msg.data.u32[0]);
 			break;
 		case CURRENT_REG:
 			break;
 		case VDC_REG:
 			/* 16 bit value */
-			temp = convert_num_to_vdc(ecu_data->inverter_can_msg.data.u32[0]);
+			temp = convert_num_to_vdc(inverter_can_msg.data.u32[0]);
 			if (temp < 30) {
 				ecu_data->inverter_vdc = 0;	
 			} else {
@@ -200,14 +106,38 @@ void handle_inverter_data(fsm_ecu_data_t *ecu_data) {
 			}	 
 			break;
 		case RPM_REG:
-			ecu_data->rpm = (MAX_RPM * convert_to_big_endian(ecu_data->inverter_can_msg.data.u32[0])) / 32767;
+			ecu_data->rpm = (MAX_RPM * convert_to_big_endian(inverter_can_msg.data.u32[0])) / 32767;
 			break;
 		case ERROR_REG:
-			ecu_data->inverter_error = (ecu_data->inverter_can_msg.data.u32[0] & 0x00FFFF00) >> 8;
+			ecu_data->inverter_error = (inverter_can_msg.data.u32[0] & 0x00FFFF00) >> 8;
 			break;
 		default:
 			break;
 	}
 }
 
+#define ECU_CURRENT_CAR_STATE 0x633
+#define ECU_IMPLAUSIBILITIES  0x635
 
+
+void get_new_data(fsm_ecu_data_t *ecu_data) {
+	uint8_t i;
+	float torqueRequest;
+	car_can_msg_t can_msg;
+	inverter_can_msg_t inverter_can_msg;
+	
+	//Take care of Inverter Data
+	while(xQueueReceive( queue_from_inverter, &inverter_can_msg, 0 ) == pdTRUE) {
+		handle_inverter_data(ecu_data, inverter_can_msg);
+	}
+	
+	//Handle TorqueRequest, if timeout, set request = 0
+	if(xQueueReceive( torque_request_ecu, &torqueRequest, 0 ) == pdTRUE) {
+		ecu_data->trq_request = torqueRequest;
+		torqueRequestTimeout = TRQ_TIMEOUT;
+	}else{
+		if(!torqueRequestTimeout--){
+			ecu_data->trq_request = 0;
+		}
+	}
+}

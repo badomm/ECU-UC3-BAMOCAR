@@ -58,11 +58,8 @@ void ecu_can_init(void) {
 	INTC_init_interrupts();
 	
 	/* Allocate channel message box */
-	mob_rx_dash_data.handle			= 1;
-	mob_rx_bms.handle	= 2;
-	mob_ecu_inverter_status.handle	= 3;
-	mob_rx_bspd.handle			= 4;
-	mob_rx_ecu.handle = 5;
+	mob_tx_dash.handle = 1;
+	mob_torque_request_ecu.handle = 7;
 
 
 	/* Initialize CAN channels */
@@ -71,44 +68,22 @@ void ecu_can_init(void) {
 	
 	
 	/* Prepare for message reception */
-	setupRxmailbox(CAN_BUS_0, mob_rx_dash_data);
-	setupRxmailbox(CAN_BUS_1, mob_rx_bms);
-	setupRxmailbox(CAN_BUS_0, mob_rx_bspd);
-	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
+	setupRxmailbox(CAN_BUS_1, mob_torque_request_ecu);
 	asm("nop");
 }
 
 void can_out_callback_channel0(U8 handle, U8 event){
-	if (handle == mob_rx_dash_data.handle) {
-		gpio_toggle_pin(LED1);
-		mob_rx_dash_data.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;
-		mob_rx_dash_data.can_msg->id			= can_get_mob_id(CAN_BUS_0, handle);
-		mob_rx_dash_data.dlc					= can_get_mob_dlc(CAN_BUS_0, handle);
-		mob_rx_dash_data.status				= event;
-		
-		car_can_msg_t dash_can_msg;
-		
-		dash_can_msg.data.u64 = mob_rx_dash_data.can_msg->data.u64;
-		dash_can_msg.id = mob_rx_dash_data.can_msg->id;
-		xQueueSendToBackFromISR(queue_dash_msg, &dash_can_msg, NULL);
-		/* Empty message field */
-		mob_rx_dash_data.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_0, mob_rx_dash_data.handle, mob_rx_dash_data.req_type, mob_rx_dash_data.can_msg);
-		
-	} else if (handle == mob_rx_bspd.handle) {
-		mob_rx_bspd.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;
-		mob_rx_bspd.can_msg->id			= can_get_mob_id(CAN_BUS_0, handle);
-		mob_rx_bspd.dlc					= can_get_mob_dlc(CAN_BUS_0, handle);
-		mob_rx_bspd.status				= event;
-		
-		xQueueOverwriteFromISR( queue_bspd, &mob_rx_bspd.can_msg->data.u8[0], NULL );
-		/* Empty message field */
-		mob_rx_bspd.can_msg->data.u64 = 0x0LL;
-		/* Prepare message reception */
-		can_rx(CAN_BUS_0, mob_rx_bspd.handle, mob_rx_bspd.req_type, mob_rx_bspd.can_msg);
-	} else if (handle == mob_rx_ecu.handle){gpio_toggle_pin(LED1); can_rx(CAN_BUS_0, mob_rx_ecu.handle, mob_rx_ecu.req_type, mob_rx_ecu.can_msg);}
+	
+	can_mob_t *can_mob = NULL;
+	car_can_msg_t can_msg = {.data.u64 = can_get_mob_data(CAN_BUS_0, handle).u64,
+							 .id = can_get_mob_id(CAN_BUS_0, handle)
+							};
+	
+	/*Reset mailbox and prepeare for reception*/
+	if(can_mob != NULL){
+		can_mob->can_msg->data.u64 = 0x0LL; /* Empty message field */
+		setupRxmailbox(CAN_BUS_0, *can_mob); /* Prepare message reception */
+	}
 }
 
 /* Call Back called by can_drv, channel 1 */
@@ -119,17 +94,11 @@ void can_out_callback_channel1(U8 handle, U8 event){
 							};
 	/*Check which handle the message is*/
 	
-	//BMS
-	if(handle == mob_rx_bms.handle){
-			can_mob = &mob_rx_bms;
-			xQueueSendToBackFromISR(queue_bms_rx, &can_msg, NULL);
+	//Torque Request from ECU
+	if (handle == mob_torque_request_ecu.handle) {
+		can_mob = &mob_torque_request_ecu;
+		xQueueOverwriteFromISR(queue_bspd, &mob_torque_request_ecu.can_msg->data.f[0], NULL );
 	}
-	//ECU
-	else if(handle == mob_rx_ecu.handle){
-			gpio_toggle_pin(LED1);
-			can_mob = &mob_rx_ecu;
-			xQueueSendToBackFromISR(queue_ecu_rx, &can_msg, NULL);
-	}		
 	
 	/*Reset mailbox and prepeare for reception*/
 	if(can_mob != NULL){

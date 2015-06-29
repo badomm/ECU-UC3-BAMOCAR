@@ -71,26 +71,7 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 //Dash messages
 ////////////////////////////////
 
-//Send inverter and ecu status
-void ecu_can_send_inverter_status(uint16_t inverter_vdc, uint16_t ecu_error, uint16_t rpm, int16_t trq_cmd) {
-	mob_ecu_inverter_status.can_msg->data.u64	  = 0x0LL;
-	mob_ecu_inverter_status.can_msg->data.u16[0] = inverter_vdc;
-	mob_ecu_inverter_status.can_msg->data.u16[1] = ecu_error;
-	mob_ecu_inverter_status.can_msg->data.u16[2] = rpm;
-	mob_ecu_inverter_status.can_msg->data.s16[3] = trq_cmd;
-	
-	can_tx(CAN_BUS_0, mob_ecu_inverter_status.handle, mob_ecu_inverter_status.dlc, CAN_DATA_FRAME, mob_ecu_inverter_status.can_msg);
-}
 
-void ecu_can_send_tractive_system_active(void) {
-	mob_tx_dash.can_msg->data.u64	 = 0x0LL;
-	mob_tx_dash.can_msg->data.u16[0]  = 0x1;
-	
-	mob_tx_dash.can_msg->id = CANR_FCN_PRI_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID;
-	mob_tx_dash.dlc = 2;
-	
-	can_tx(CAN_BUS_0, mob_tx_dash.handle, mob_tx_dash.dlc, CAN_DATA_FRAME,mob_tx_dash.can_msg);
-}
 
 void ecu_can_send_alive() {
 	mob_tx_dash.can_msg->data.u8[0]  = ALIVE_INVERTER;	
