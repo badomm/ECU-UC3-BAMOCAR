@@ -28,7 +28,9 @@ void can_out_callback_channel1(U8 handle, U8 event);
 volatile can_msg_t mob_ram_ch0[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ram_loc")));
 volatile can_msg_t mob_ram_ch1[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ram_loc")));
 
-
+void setupRxmailbox(U8 CAN, can_mob_t mob){
+		can_rx(CAN, mob.handle, mob.req_type, mob.can_msg);
+}
 
 void ecu_can_init(void) {
 	/* Setup the generic clock for CAN output */
@@ -68,34 +70,11 @@ void ecu_can_init(void) {
 	can_init(CAN_BUS_1, ((uint32_t)&mob_ram_ch1[0]), CANIF_CHANNEL_MODE_NORMAL,	can_out_callback_channel1);
 	
 	
-	/* Prepare for message reception */		
-	can_rx(
-		CAN_BUS_0
-		, mob_rx_dash_data.handle
-		, mob_rx_dash_data.req_type
-		, mob_rx_dash_data.can_msg
-	);
-	
-	can_rx(
-		CAN_BUS_1
-		, mob_rx_bms.handle
-		, mob_rx_bms.req_type
-		, mob_rx_bms.can_msg
-	);
-	
-	can_rx(
-		CAN_BUS_0
-		, mob_rx_bspd.handle
-		, mob_rx_bspd.req_type
-		, mob_rx_bspd.can_msg
-	);
-	
-	can_rx(
-		CAN_BUS_0
-		, mob_rx_ecu.handle
-		, mob_rx_ecu.req_type
-		, mob_rx_ecu.can_msg
-	);
+	/* Prepare for message reception */
+	setupRxmailbox(CAN_BUS_0, mob_rx_dash_data);
+	setupRxmailbox(CAN_BUS_1, mob_rx_bms);
+	setupRxmailbox(CAN_BUS_0, mob_rx_bspd);
+	setupRxmailbox(CAN_BUS_0, mob_rx_ecu);
 	asm("nop");
 }
 
