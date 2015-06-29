@@ -31,11 +31,6 @@ static uint16_t attempts =	0;
 void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->state = STATE_STARTUP;
 	ecu_data->inverter_can_msg = (inverter_can_msg_t){.data.u64 = 0x0LL, .dlc = 0};
-	ecu_data->trq_sens0 = 0;
-	ecu_data->trq_sens1 = 0;
-	ecu_data->trq_pedal = 0;
-	ecu_data->trq_sens0_err = 0;
-	ecu_data->trq_sens1_err = 0;
 	ecu_data->trq_cmd = 0;
 	ecu_data->control_u = 0;
 	ecu_data->dash_msg = (dash_can_msg_t){.data.u64 = 0x0LL, .id = 0};
@@ -45,10 +40,7 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->rpm = 0;
 	ecu_data->motor_temp = 0;
 	ecu_data->inverter_temp = 0;
-	ecu_data->brake_front = 0;
-	ecu_data->brake_rear = 0;
 	ecu_data->flag_start_precharge = 0;
-	ecu_data->flag_brake_implausible = 0;
 	ecu_data->max_cell_temp = 0;
 	ecu_data->flag_drive_enable = DRIVE_DISABLED;
 	ecu_data->arctos_mode = ARCTOS_MODE_NORMAL;
@@ -164,11 +156,8 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 
 fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_CHARGED;
-	uint8_t no_trq_sens = 0;
 
 	get_new_data(ecu_data);
-	no_trq_sens	  = get_trq_sens(ecu_data);
-	get_brake_sens(ecu_data);
 	
 	if (ecu_data->inverter_vdc < 50) {
 		gpio_set_pin_low(FRG_PIN);
@@ -184,24 +173,9 @@ fsm_ecu_state_t fsm_ecu_state_charged_func( fsm_ecu_data_t *ecu_data ) {
 			ecu_data->ecu_error |= (1 << ERR_AIR_PLUS);
 			next_state = STATE_ERROR;
 		}
-		if (no_trq_sens) {
-			ecu_data->ecu_error |= (1 << ERR_TRQ_SENSORS);
-			next_state = STATE_ERROR;
-		}
-		if (ecu_data->brake_front == 0) {
-			ecu_data->ecu_error |= (1 << ERR_BRAKE_SENS_FRONT);
-			next_state = STATE_ERROR;
-		}
-		if (ecu_data->brake_rear == 0) {
-			ecu_data->ecu_error |= (1 << ERR_BRAKE_SENS_REAR);
-			next_state = STATE_ERROR;
-		}
 		if (next_state != STATE_ERROR) {
-			if ((ecu_data->trq_sens0 < 20) && (ecu_data->trq_sens1 < 20)) {
 				ecu_can_send_play_rtds();
 				next_state = STATE_ENABLE_DRIVE;
-				
-			}
 		}
 	}
 	return next_state;
@@ -283,9 +257,7 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 	int16_t kers = 0;
 	
 	get_new_data(ecu_data);
-	get_trq_sens(ecu_data);
-	get_brake_sens(ecu_data);
-	
+
 	if (ecu_data->flag_drive_enable == DRIVE_DISABLE_REQUEST) {
 		gpio_set_pin_low(FRG_PIN);
 		ecu_data->flag_drive_enable = DRIVE_DISABLED;
@@ -319,17 +291,9 @@ fsm_ecu_state_t fsm_ecu_state_ready_func( fsm_ecu_data_t *ecu_data ) {
 		ecu_data->ecu_error |= (1 << ERR_BSPD);
 		next_state = STATE_ERROR;
 		
- 	} else if ( torque_plausibility_check(ecu_data) == false ) {
- 		/* Deviation > 10 %. Shut down power to motor */
- 		gpio_set_pin_low(FRG_PIN);
- 		next_state = STATE_PLAUSIBILITY_ERROR;
+ 	} 
 		 
- 	} else if ((brake_plausibility_check(ecu_data) == false) || (bspd == BSPD_PLAUSIBILITY_OCCURED)) {
- 		gpio_set_pin_low(FRG_PIN);
- 		ecu_data->flag_brake_implausible = 1;
- 		next_state = STATE_PLAUSIBILITY_ERROR;
-		 
-  	} else {
+	else {
 		kers = calc_kers(ecu_data);
 		if (kers < 0) {
 			ecu_data->trq_cmd = kers;
@@ -347,22 +311,10 @@ fsm_ecu_state_t fsm_ecu_state_plausibility_error_func( fsm_ecu_data_t *ecu_data 
 	fsm_ecu_state_t next_state = STATE_PLAUSIBILITY_ERROR;
 
 	get_new_data(ecu_data);
-	get_trq_sens(ecu_data);
 
-	if ( torque_plausibility_check(ecu_data) == true ) {
-		if (ecu_data->flag_brake_implausible) {
-			/* Can return to normal state if pedal travel < 5% (pedal = <0,1000>) */
-			if (max(ecu_data->trq_sens0, ecu_data->trq_sens1) < 50) {
-				ecu_data->flag_brake_implausible = 0;
-				gpio_set_pin_high(FRG_PIN);
-				next_state = STATE_READY;
-			}
-		} else {
-			gpio_set_pin_high(FRG_PIN);
-			next_state = STATE_READY;	
-
-		}
-	}
+	gpio_set_pin_high(FRG_PIN);
+	next_state = STATE_READY;
+	
 	ecu_data->trq_cmd = 0x0;
 	ecu_can_inverter_torque_cmd(ecu_data->trq_cmd);
 	return next_state;

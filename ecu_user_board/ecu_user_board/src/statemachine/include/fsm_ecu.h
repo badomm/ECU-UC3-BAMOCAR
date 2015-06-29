@@ -23,8 +23,6 @@
 #define ERR_FRG					6 // FRG is low
 #define ERR_AIR_PLUS			7 // AIR PLUS is low
 #define ERR_BSPD				8 // BSPD signal loss
-#define ERR_BRAKE_SENS_FRONT	9 // Lost communication with front brake sensor
-#define ERR_BRAKE_SENS_REAR		10 // Lost communication with rear brake sensor
 
 // PID parameters
 #define Kp_default				2.0F	// Proportional gain
@@ -72,10 +70,6 @@ typedef enum arctos_mode{
 typedef struct fsm_ecu_data{
 	fsm_ecu_state_t state;
 	inverter_can_msg_t inverter_can_msg;
-	int16_t trq_sens0;
-	int16_t trq_sens1;
-	uint8_t trq_sens0_err;
-	uint8_t trq_sens1_err;
 	int16_t trq_cmd;
 	float control_u;
 	float trq_pedal;
@@ -86,10 +80,7 @@ typedef struct fsm_ecu_data{
 	uint16_t rpm;
 	uint16_t motor_temp;
 	uint16_t inverter_temp;
-	uint16_t brake_front;
-	uint16_t brake_rear;
 	uint8_t flag_start_precharge;
-	uint8_t flag_brake_implausible;
 	int8_t max_cell_temp;
 	flag_drive_enable_t flag_drive_enable;
 	arctos_mode_t arctos_mode;

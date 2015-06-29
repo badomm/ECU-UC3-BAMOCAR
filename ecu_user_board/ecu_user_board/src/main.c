@@ -62,14 +62,8 @@ int main(void){
 	queue_from_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN, sizeof(inverter_can_msg_t));
 	queue_to_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN+5, sizeof(inverter_can_msg_t));
 	queue_dash_msg		= xQueueCreate(QUEUE_DASH_MSG_LEN, sizeof(dash_can_msg_t));	
-	queue_trq_sens0		= xQueueCreate(1, sizeof(int16_t));
-	queue_trq_sens1		= xQueueCreate(1, sizeof(int16_t));
 	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(bms_can_msg_t));
-	queue_brake_front	= xQueueCreate(2, sizeof(uint16_t));
-	queue_brake_rear	= xQueueCreate(2, sizeof(uint16_t));
 	queue_bspd			= xQueueCreate(1, sizeof(uint8_t));
-	queue_trq_sens0_err = xQueueCreate(1, sizeof(uint8_t));
-	queue_trq_sens1_err = xQueueCreate(1, sizeof(uint8_t));
 	
 	xTaskCreate(
 		task_main

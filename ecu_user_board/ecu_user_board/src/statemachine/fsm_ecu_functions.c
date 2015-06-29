@@ -15,49 +15,14 @@
 #include "fsm_ecu_functions.h"
 
 #define BMS_PRECHARGE_BIT			3
-#define BRAKE_PLAUSIBILITY_TIME_LIMIT 25
-#define BRAKE_KERS_TRESHOLD			5000 // ???
-#define BRAKE_TRESHOLD				5000
 #define MAX_KERS					(int16_t)-3277
 
 
 
 
-bool brake_over_travel_check (fsm_ecu_data_t* ecu_data) {
-	return true;
-}
 
-bool brake_plausibility_check(fsm_ecu_data_t *ecu_data) {
-	static uint8_t plausibility_timer = 0;
-	int16_t trq_sens = max(ecu_data->trq_sens0, ecu_data->trq_sens1);
-	
-	if ((trq_sens > 250) && (ecu_data->brake_front > BRAKE_TRESHOLD)) {
-		plausibility_timer++;
-		if (plausibility_timer == BRAKE_PLAUSIBILITY_TIME_LIMIT) {
-			plausibility_timer = 0;
-			return false;
-		}
-	} else {
-		plausibility_timer = 0;
-	}
-	return true;
 
-}
 
-bool torque_plausibility_check(fsm_ecu_data_t *ecu_data) {
-	/* Torque sensors = <0, 1000> */
-	if ( ecu_data->trq_sens0_err || ecu_data->trq_sens1_err) {
-		asm("nop");
-		return false;
-	} else {
-		int16_t deviation = max(ecu_data->trq_sens0, ecu_data->trq_sens1) - min(ecu_data->trq_sens0,ecu_data->trq_sens1);
-		if (deviation > 100) {
-			asm("nop");
-			return false;
-		}
-		return true;
-	}
-}
 
 uint16_t calc_bms_power(fsm_ecu_data_t *ecu_data) {
 	int16_t current = ecu_data->bms_current;
@@ -82,7 +47,6 @@ int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
 	}
 	
 	if (allow_kers) {
-		if ((ecu_data->trq_sens0 < 100) && (ecu_data->trq_sens1 < 100)) {
 			if (speed > 5.5) { //km/h
 				if ((ecu_data->max_cell_temp > 0) && (ecu_data->max_cell_temp < 44)) {
 					return (MAX_KERS*ecu_data->kers_factor)/100; //TODO Return a value from ecu_data that is received from dash
@@ -90,7 +54,6 @@ int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
 			} else {
 				allow_kers = false;
 			}
-		}
 	}
 	return 1;
 }
@@ -113,53 +76,8 @@ uint8_t check_inverter_error(fsm_ecu_data_t *ecu_data) {
 	return (uint8_t)(temp & 1 << PWR_FAULT) | (temp & 1 << RFE_FAULT) | (temp & 1 << RESOLVER_FAULT);
 }
 
-uint8_t get_brake_sens(fsm_ecu_data_t *ecu_data) {
-	uint8_t status = 0;
-	if (xQueueReceive( queue_brake_front, &ecu_data->brake_front, 0 ) == pdFALSE) {
-		status |= 1 << 0;
-	}
-	if (xQueueReceive( queue_brake_rear, &ecu_data->brake_rear, 0 ) == pdFALSE) {
-		status |= 1 << 1;
-	}
-	return status;
-}
 
 
-
-uint8_t get_trq_sens(fsm_ecu_data_t *ecu_data) {
-	uint8_t status = 0;
-	static uint8_t trq_sens0_missed = 0;
-	static uint8_t trq_sens1_missed = 0;
-	if (xQueueReceive( queue_trq_sens0, &ecu_data->trq_sens0, 0 ) == pdFALSE ) {
-		status++;
-		trq_sens0_missed++;
-		if (trq_sens0_missed == 10) {
-			ecu_data->trq_sens0 = 0;
-			ecu_data->trq_sens0_err = 0xFF;
-			trq_sens0_missed = 0;	
-		}
-	} else {
-		trq_sens0_missed = 0;
-	}
-	if (xQueueReceive( queue_trq_sens1, &ecu_data->trq_sens1, 0 ) == pdFALSE ) {
-		status++;
-		trq_sens1_missed++;
-		if (trq_sens1_missed == 10) {
-			ecu_data->trq_sens1 = 0;
-			ecu_data->trq_sens1_err = 0xFF;
-			trq_sens1_missed = 0;
-		}
-	} else {
-		trq_sens1_missed = 0;
-	}
-	if (xQueueReceive( queue_trq_sens0_err, &ecu_data->trq_sens0_err, 0 ) == pdFALSE ) {
-		status++;
-	}
-	if (xQueueReceive( queue_trq_sens1_err, &ecu_data->trq_sens1_err, 0 ) == pdFALSE ) {
-		status++;
-	}
-	return status;
-}
 
 uint16_t convert_num_to_vdc(uint32_t num) {
 	/* num = 33.2*vdc - 827 */

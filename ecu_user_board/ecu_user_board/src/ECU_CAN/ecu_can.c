@@ -137,25 +137,7 @@ void can_out_callback_channel0(U8 handle, U8 event){
 		/* Prepare message reception */
 		can_rx(CAN_BUS_0, mob_rx_dash_data.handle, mob_rx_dash_data.req_type, mob_rx_dash_data.can_msg);
 		
-	} else if (handle == mob_rx_trq_sens0.handle) {
-		mob_rx_trq_sens0.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;
-		mob_rx_trq_sens0.can_msg->id		= can_get_mob_id(CAN_BUS_0, handle);
-		mob_rx_trq_sens0.dlc				= can_get_mob_dlc(CAN_BUS_0, handle);
-		mob_rx_trq_sens0.status				= event;
-	
-		xQueueOverwriteFromISR(queue_trq_sens0, &mob_rx_trq_sens0.can_msg->data.s16[0], NULL);
-		xQueueOverwriteFromISR(queue_trq_sens0_err, &mob_rx_trq_sens0.can_msg->data.u8[2], NULL);
-		asm("nop");
-		/* Empty message field */
-		mob_rx_trq_sens0.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_0, 
-		mob_rx_trq_sens0.handle,
-		mob_rx_trq_sens0.req_type,
-		mob_rx_trq_sens0.can_msg);
-		
-	}	else if (handle == mob_rx_bspd.handle) {
+	} else if (handle == mob_rx_bspd.handle) {
 		mob_rx_bspd.can_msg->data.u64	= can_get_mob_data(CAN_BUS_0, handle).u64;
 		mob_rx_bspd.can_msg->id			= can_get_mob_id(CAN_BUS_0, handle);
 		mob_rx_bspd.dlc					= can_get_mob_dlc(CAN_BUS_0, handle);
@@ -174,25 +156,7 @@ void can_out_callback_channel0(U8 handle, U8 event){
 
 /* Call Back called by can_drv, channel 1 */
 void can_out_callback_channel1(U8 handle, U8 event){
-	if (handle == mob_rx_trq_sens1.handle) {
-		mob_rx_trq_sens1.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_rx_trq_sens1.can_msg->id			= can_get_mob_id(CAN_BUS_1, handle);
-		mob_rx_trq_sens1.dlc					= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_rx_trq_sens1.status					= event;
-		
-		xQueueOverwriteFromISR(queue_trq_sens1, &mob_rx_trq_sens1.can_msg->data.s16[0], NULL);
-		xQueueOverwriteFromISR(queue_trq_sens1_err, &mob_rx_trq_sens1.can_msg->data.u8[2], NULL);
-		asm("nop");
-		/* Empty message field */
-		mob_rx_trq_sens1.can_msg->data.u64 = 0x0LL;
-		
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1, 
-		mob_rx_trq_sens1.handle,
-		mob_rx_trq_sens1.req_type,
-		mob_rx_trq_sens1.can_msg);
-	
-	} else if (handle == mob_rx_bms.handle) {
+	 if (handle == mob_rx_bms.handle) {
 		mob_rx_bms.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
 		mob_rx_bms.can_msg->id		= can_get_mob_id(CAN_BUS_1, handle);
 		mob_rx_bms.dlc				= can_get_mob_dlc(CAN_BUS_1, handle);
@@ -210,24 +174,6 @@ void can_out_callback_channel1(U8 handle, U8 event){
 		mob_rx_bms.req_type,
 		mob_rx_bms.can_msg);
 		
-	} else if (handle == mob_brk.handle) {
-		mob_brk.can_msg->data.u64	= can_get_mob_data(CAN_BUS_1, handle).u64;
-		mob_brk.can_msg->id			= can_get_mob_id(CAN_BUS_1, handle);
-		mob_brk.dlc					= can_get_mob_dlc(CAN_BUS_1, handle);
-		mob_brk.status				= event;
-		
-		if (mob_brk.can_msg->id == (CANR_FCN_DATA_ID | CANR_GRP_SENS_BRK_ID | CANR_MODULE_ID0_ID)) {
-			xQueueSendToBackFromISR( queue_brake_front, &mob_brk.can_msg->data.u16[0], NULL );
-		} else {
-			xQueueSendToBackFromISR( queue_brake_rear, &mob_brk.can_msg->data.u16[0], NULL );
-		}
-		/* Empty message field */
-		mob_brk.can_msg->data.u64 = 0x0LL;
-		/* Prepare message reception */
-		can_rx(CAN_BUS_1,
-		mob_brk.handle,
-		mob_brk.req_type,
-		mob_brk.can_msg);
 	}
 }
 

@@ -20,14 +20,8 @@
 xQueueHandle queue_from_inverter;
 xQueueHandle queue_to_inverter;
 xQueueHandle queue_dash_msg;
-xQueueHandle queue_trq_sens0;
-xQueueHandle queue_trq_sens1;
 xQueueHandle queue_bms_rx;
-xQueueHandle queue_brake_front;
-xQueueHandle queue_brake_rear;
 xQueueHandle queue_bspd;
-xQueueHandle queue_trq_sens0_err;
-xQueueHandle queue_trq_sens1_err;
 
 
 
