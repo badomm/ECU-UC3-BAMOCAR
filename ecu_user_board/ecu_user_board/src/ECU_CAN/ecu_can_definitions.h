@@ -1,0 +1,17 @@
+/*
+ * ecu_can_definitions.h
+ *
+ * Created: 6/30/2015 18:01:05
+ *  Author: Jimmy Chau
+ */ 
+#include "revolve_can_definitions.h"
+
+#ifndef ECU_CAN_DEFINITIONS_H_
+#define ECU_CAN_DEFINITIONS_H_
+
+
+#define CAN_ID_INVERTER_VOLTAGE CANR_FCN_DATA_ID|CANR_GRP_INVERTER_ID|CANR_MODULE_ID0_ID
+#define CAN_ID_INVERTER_RPM CANR_FCN_DATA_ID|CANR_GRP_INVERTER_ID|CANR_MODULE_ID2_ID
+#define CAN_DASH_ALIVE_ID CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID
+
+#endif /* ECU_CAN_DEFINITIONS_H_ */

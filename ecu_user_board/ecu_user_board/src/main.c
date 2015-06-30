@@ -15,6 +15,8 @@
 #include "ecu_can_mob.h"
 #include "fsm_ecu.h"
 #include "mcp2515.h"
+#include "ecu_can_definitions.h"
+#include "endianSwapper.h"
 #include <stdbool.h>
 
 
@@ -227,14 +229,19 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_10_HZ) == 0) {
 		ecu_can_inverter_read_reg(VDC_REG);
 		ecu_can_inverter_read_reg(RPM_REG);
-		//ecu_can_send_voltage((float) ecu_data->inverter_vdc);
-		//ecu_can_send_rpm( (float) ecu_data->rpm);
+		
+		Union32 vdc_send;
+		Union32 rpm_send;
+		vdc_send.f = endianSwapperF(ecu_data->inverter_vdc);
+		rpm_send.f = endianSwapperF(ecu_data->rpm);
+		ecu_can_send(CAN_BUS_0, CAN_ID_INVERTER_VOLTAGE, DLC_FLOAT, vdc_send.u8, 0);
+		ecu_can_send(CAN_BUS_0, CAN_ID_INVERTER_RPM, DLC_FLOAT, rpm_send.u8, 0);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
 			//Alive message
 			U8 alive_msg = ALIVE_INVERTER;
-			ecu_can_send(CAN_BUS_0, CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID, 1,  &alive_msg, 0);
+			ecu_can_send(CAN_BUS_0, CAN_DASH_ALIVE_ID, 1,  &alive_msg, 0);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {

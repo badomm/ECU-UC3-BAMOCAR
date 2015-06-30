@@ -10,9 +10,9 @@
 #define ECU_CAN_MESSAGES_H_
 
 
-#define DLC_FLOAT 4
-#define DLC_INT 4
-#define DLC_U16 2
+#define DLC_FLOAT (U8)4
+#define DLC_INT (U8)4
+#define DLC_U16 (U8)2
 ////////////////////////////
 // Inverter Messages
 ///////////////////////////

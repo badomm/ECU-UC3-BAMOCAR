@@ -9,6 +9,7 @@
 #ifndef ECU_CAN_H_
 #define ECU_CAN_H_
 
+#include "FreeRTOS.h"
 #include "revolve_can_definitions.h"
 #include "ecu_can_messages.h"
 #include "can.h"
@@ -29,6 +30,7 @@ typedef struct inverter_can_msg{
 typedef struct car_can_msg{
 	Union64 data;
 	uint32_t id;
+	U8 dlc;
 }car_can_msg_t;
 
 

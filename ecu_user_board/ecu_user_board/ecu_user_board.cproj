@@ -367,13 +367,13 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="endianSwapper.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\can-definitions\revolve_can_definitions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ECU_CAN\ecu_can.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ECU_CAN\ecu_can_definitions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ECU_CAN\ecu_can_messages.h">
@@ -413,6 +413,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ECU_CAN\ecu_can_mob.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\endianSwapper.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\endianSwapper.h">

@@ -24,6 +24,7 @@
 static xQueueHandle queueCanSend_0;
 static xQueueHandle queueCanSend_1;
 
+
 static can_mob_t mob_tx_can0 = {
 	CAN_MOB_NOT_ALLOCATED,
 	NULL,
@@ -96,8 +97,8 @@ void ecu_can_init(void) {
 	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
 	
 	/* Prepeare Can send queue*/
-	queueCanSend_0 = xQueueCreate(20, sizeof(can_msg_t));
-	queueCanSend_1 = xQueueCreate(20, sizeof(can_msg_t));
+	queueCanSend_0 = xQueueCreate(10, sizeof(car_can_msg_t));
+	queueCanSend_1 = xQueueCreate(10, sizeof(car_can_msg_t));
 	asm("nop");
 }
 
@@ -143,12 +144,15 @@ void can_out_callback_channel1(U8 handle, U8 event){
 	}
 }
 
+
 bool ecu_can_send(U8 CAN, uint32_t id, U8 dlc, U8* data, portTickType tickToWait){
-	can_msg_t can_msg;
+	car_can_msg_t can_msg;
 	can_msg.id = id;
+	can_msg.dlc = dlc;
 	for(int i = 0; i <dlc; i++){
 		can_msg.data.u8[i] = data[i];
 	}
+	
 	if (CAN_BUS_0 == CAN)
 	{
 		return xQueueSend(queueCanSend_0, &can_msg, tickToWait);
@@ -159,23 +163,32 @@ bool ecu_can_send(U8 CAN, uint32_t id, U8 dlc, U8* data, portTickType tickToWait
 
 
 static void task_can_send(U8 CAN, can_mob_t *mob){
-	can_msg_t message;
+	car_can_msg_t message;
+	can_msg_t msg;
 	bool gotMessage = false;
 	while(1){
 		gotMessage = false;
-		if(CAN_BUS_0 == CAN){  gotMessage = xQueueReceive(queueCanSend_0, &message, portMAX_DELAY);}
-		else if(CAN_BUS_0 == CAN){	       gotMessage = xQueueReceive(queueCanSend_1, &message, portMAX_DELAY);}
+		if(CAN_BUS_0 == CAN){  
+			gotMessage = xQueueReceive(queueCanSend_0, &message, portMAX_DELAY);
+		}
+		else if(CAN_BUS_0 == CAN){
+			gotMessage = xQueueReceive(queueCanSend_1, &message, portMAX_DELAY);
+		}
+		
 		if (gotMessage)
 		{
-			while(can_tx(CAN, mob->handle, mob->dlc, CAN_DATA_FRAME, &message) != CAN_CMD_ACCEPTED);
+			msg.data.u64 = message.data.u64;
+			msg.id = message.id;
+			while(can_tx(CAN, mob->handle, message.dlc, CAN_DATA_FRAME, &msg) != CAN_CMD_ACCEPTED);
 		}
-			
+		vTaskDelay(1);
 	}
 }
 
 void taskCan0Send(){
 	while(1){
 		task_can_send(CAN_BUS_0, &mob_tx_can0);
+
 	}
 }
 void taskCan1Send(){
