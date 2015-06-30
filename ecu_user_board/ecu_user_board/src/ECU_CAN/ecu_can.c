@@ -97,8 +97,8 @@ void ecu_can_init(void) {
 	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
 	
 	/* Prepeare Can send queue*/
-	queueCanSend_0 = xQueueCreate(10, sizeof(car_can_msg_t));
-	queueCanSend_1 = xQueueCreate(10, sizeof(car_can_msg_t));
+	queueCanSend_0 = xQueueCreate(20, sizeof(car_can_msg_t));
+	queueCanSend_1 = xQueueCreate(20, sizeof(car_can_msg_t));
 	asm("nop");
 }
 
@@ -148,7 +148,7 @@ void can_out_callback_channel1(U8 handle, U8 event){
 bool ecu_can_send(U8 CAN, uint32_t id, U8 dlc, U8* data, portTickType tickToWait){
 	car_can_msg_t can_msg;
 	can_msg.id = id;
-	can_msg.dlc = dlc;
+	can_msg.dlc = dlc <8 ? dlc:8;
 	for(int i = 0; i <dlc; i++){
 		can_msg.data.u8[i] = data[i];
 	}

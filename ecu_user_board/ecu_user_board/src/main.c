@@ -70,8 +70,8 @@ int main(void){
 	queue_ecu_rx		= xQueueCreate(1, sizeof(car_can_msg_t));
 	torque_request_ecu  = xQueueCreate(1, sizeof(float));
 	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);
-	xTaskCreate(taskCan0Send, (signed portCHAR *) "CAN0 SEND", configMINIMAL_STACK_SIZE, (void *) NULL, TASK_CAN_PRIORITY, NULL);
-	xTaskCreate(taskCan1Send, (signed portCHAR *) "CAN1 SEND", configMINIMAL_STACK_SIZE, (void *) NULL, TASK_CAN_PRIORITY, NULL);
+	xTaskCreate(taskCan0Send, (signed portCHAR *) "CAN0 SEND", configMINIMAL_STACK_SIZE + 300, (void *) NULL, TASK_CAN_PRIORITY, NULL);
+	xTaskCreate(taskCan1Send, (signed portCHAR *) "CAN1 SEND", configMINIMAL_STACK_SIZE + 300, (void *) NULL, TASK_CAN_PRIORITY, NULL);
  	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
 	xTaskCreate(task_watchdog, (signed portCHAR *) "Watchdog", configMINIMAL_STACK_SIZE, NULL, TASK_WATCHDOG_PRIORITY, NULL);
 		
@@ -242,12 +242,22 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 			//Alive message
 			U8 alive_msg = ALIVE_INVERTER;
 			ecu_can_send(CAN_BUS_0, CAN_DASH_ALIVE_ID, 1,  &alive_msg, 0);
+			//State
+			Union64 stateData;
+			stateData.u16[0] = (U16) ecu_data->state;
+			stateData.u16[1] = ecu_data->ecu_error;
+			stateData.u16[2] = ecu_data->inverter_error;
+			ecu_can_send(CAN_BUS_0, CAN_ID_INVERTER_STATE, 6,  stateData.u8, 0);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
 		ecu_can_inverter_read_reg(MOTOR_TEMP_REG);
 		ecu_can_inverter_read_reg(IGBT_TEMP_REG);
 		
+		U16 inverterTempOut = endianSwapperU16(ecu_data->inverter_temp);
+		U16 motorTempOut = endianSwapperU16(ecu_data->motor_temp);
+		ecu_can_send(CAN_BUS_0, CAN_ID_INVERTER_INVERTER_TEMP, 2, &inverterTempOut, 0);
+		ecu_can_send(CAN_BUS_0, CAN_ID_INVERTER_MOTOR_TEMP, 2,    &motorTempOut, 0);
 		
 		save_state(&mcp2515_spiModule, ecu_data);
 		data_timer = 0;
