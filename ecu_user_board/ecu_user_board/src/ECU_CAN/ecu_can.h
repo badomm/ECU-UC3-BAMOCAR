@@ -33,5 +33,7 @@ typedef struct car_can_msg{
 
 
 void ecu_can_init(void);
-bool can_send(U8 CAN, can_mob_t *mob, U32 id, U8 dlc, U8* data);
+bool ecu_can_send(U8 CAN, uint32_t id, U8 dlc, U8* data, portTickType tickToWait);
+void taskCan0Send();
+void taskCan1Send();
 #endif /* ECU_CAN_H_ */

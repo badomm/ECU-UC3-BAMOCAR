@@ -23,9 +23,4 @@ void ecu_can_inverter_enable_drive(void);
 void ecu_can_inverter_disable_drive(void);
 void ecu_can_inverter_read_torque_periodic(void);
 
-//////////////////////////////////
-//Dash messages
-////////////////////////////////
-
-
 #endif /* ECU_CAN_MESSAGES_H_ */

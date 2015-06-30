@@ -68,6 +68,8 @@ int main(void){
 	queue_ecu_rx		= xQueueCreate(1, sizeof(car_can_msg_t));
 	torque_request_ecu  = xQueueCreate(1, sizeof(float));
 	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);
+	xTaskCreate(taskCan0Send, (signed portCHAR *) "CAN0 SEND", configMINIMAL_STACK_SIZE, (void *) NULL, TASK_CAN_PRIORITY, NULL);
+	xTaskCreate(taskCan1Send, (signed portCHAR *) "CAN1 SEND", configMINIMAL_STACK_SIZE, (void *) NULL, TASK_CAN_PRIORITY, NULL);
  	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
 	xTaskCreate(task_watchdog, (signed portCHAR *) "Watchdog", configMINIMAL_STACK_SIZE, NULL, TASK_WATCHDOG_PRIORITY, NULL);
 		
@@ -232,7 +234,7 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_1_HZ) == 0) {
 			//Alive message
 			U8 alive_msg = ALIVE_INVERTER;
-			can_send(CAN_BUS_0, &mob_tx_dash, CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID, 1,  &alive_msg);
+			ecu_can_send(CAN_BUS_0, CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID, 1,  &alive_msg, 0);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {

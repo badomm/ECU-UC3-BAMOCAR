@@ -21,6 +21,24 @@
  */
 
 
+static xQueueHandle queueCanSend_0;
+static xQueueHandle queueCanSend_1;
+
+static can_mob_t mob_tx_can0 = {
+	CAN_MOB_NOT_ALLOCATED,
+	NULL,
+	1,
+	CAN_DATA_FRAME,
+	CAN_STATUS_NOT_COMPLETED,
+};
+static can_mob_t mob_tx_can1 = {
+	CAN_MOB_NOT_ALLOCATED,
+	NULL,
+	1,
+	CAN_DATA_FRAME,
+	CAN_STATUS_NOT_COMPLETED,
+};
+
 /* Prototypes */
 void can_out_callback_channel0(U8 handle, U8 event);
 void can_out_callback_channel1(U8 handle, U8 event);
@@ -59,6 +77,8 @@ void ecu_can_init(void) {
 	INTC_init_interrupts();
 	
 	/* Allocate channel message box */
+	mob_tx_can0.handle = 5;
+	mob_tx_can1.handle = 6;
 	mob_tx_dash.handle = 1;
 	mob_rx_ecu.handle = 2;
 	mob_tx_voltage.handle = 3;
@@ -74,6 +94,10 @@ void ecu_can_init(void) {
 	/* Prepare for message reception */
 	setupRxmailbox(CAN_BUS_1, mob_torque_request_ecu);
 	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
+	
+	/* Prepeare Can send queue*/
+	queueCanSend_0 = xQueueCreate(20, sizeof(can_msg_t));
+	queueCanSend_1 = xQueueCreate(20, sizeof(can_msg_t));
 	asm("nop");
 }
 
@@ -119,14 +143,44 @@ void can_out_callback_channel1(U8 handle, U8 event){
 	}
 }
 
-bool can_send(U8 CAN, can_mob_t *mob, uint32_t id, U8 dlc, U8* data){
-	mob->dlc = dlc;
-	mob->can_msg->id = id;
+bool ecu_can_send(U8 CAN, uint32_t id, U8 dlc, U8* data, portTickType tickToWait){
+	can_msg_t can_msg;
+	can_msg.id = id;
 	for(int i = 0; i <dlc; i++){
-		mob->can_msg->data.u8[i] = data[i];
+		can_msg.data.u8[i] = data[i];
 	}
-	if(CAN_CMD_ACCEPTED == can_tx(CAN, mob->handle, mob->dlc, CAN_DATA_FRAME, mob->can_msg)){
-		return true;
+	if (CAN_BUS_0 == CAN)
+	{
+		return xQueueSend(queueCanSend_0, &can_msg, tickToWait);
+	}else if(CAN_BUS_1 == CAN){
+		return xQueueSend(queueCanSend_1, &can_msg, tickToWait);
 	}
-	return false;
 }
+
+
+static void task_can_send(U8 CAN, can_mob_t *mob){
+	can_msg_t message;
+	bool gotMessage = false;
+	while(1){
+		gotMessage = false;
+		if(CAN_BUS_0 == CAN){  gotMessage = xQueueReceive(queueCanSend_0, &message, portMAX_DELAY);}
+		else if(CAN_BUS_0 == CAN){	       gotMessage = xQueueReceive(queueCanSend_1, &message, portMAX_DELAY);}
+		if (gotMessage)
+		{
+			while(can_tx(CAN, mob->handle, mob->dlc, CAN_DATA_FRAME, &message) != CAN_CMD_ACCEPTED);
+		}
+			
+	}
+}
+
+void taskCan0Send(){
+	while(1){
+		task_can_send(CAN_BUS_0, &mob_tx_can0);
+	}
+}
+void taskCan1Send(){
+	while(1){
+		task_can_send(CAN_BUS_1, &mob_tx_can1);
+	}
+}
+

@@ -12,18 +12,9 @@
 #include "revolve_can_definitions.h"
 
 
-can_msg_t msg_tx_dash  = {
-	{
-		{
-			.id			= CANR_FCN_CMD_ID | CANR_GRP_ECU_ID | CANR_MODULE_ID0_ID,
-			.id_mask	= 0x7FF,
-		},
-	},
-	.data.u64 = 0x0LL,
-};
 can_mob_t mob_tx_dash = {
 	CAN_MOB_NOT_ALLOCATED,
-	&msg_tx_dash,
+	NULL,
 	1,
 	CAN_DATA_FRAME,
 	CAN_STATUS_NOT_COMPLETED,
