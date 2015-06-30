@@ -6,6 +6,7 @@
  */ 
 
 #include <asf.h>
+#include <can.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -67,42 +68,3 @@ void ecu_can_inverter_read_reg(uint8_t inverter_reg) {
 }
 
 
-//////////////////////////////////
-//Dash messages
-////////////////////////////////
-
-
-void can_send(U8 CAN, can_mob_t mob){
-	can_tx(CAN, mob.handle, mob.dlc, CAN_DATA_FRAME,mob.can_msg);
-}
-
-void ecu_can_send_alive() {
-	mob_tx_dash.can_msg->data.u8[0]  = ALIVE_INVERTER;	
-	mob_tx_dash.can_msg->id = CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID;
-	mob_tx_dash.dlc = CANR_ALIVE_MSG_DLC;
-	can_send(CAN_BUS_0, mob_tx_dash);
-}
-
-void ecu_can_send_voltage(float voltage) {
-	Union32 voltageBigEndian;
-	Union32 voltagelittleEndian;
-	voltageBigEndian.f = voltage;
-	voltagelittleEndian.u32 = endianSwapperU32(voltageBigEndian.u32);
-	
-	mob_tx_voltage.can_msg->data.u32[0]  = voltagelittleEndian.u32;
-	mob_tx_voltage.dlc = 4;
-	mob_tx_voltage.can_msg->id = 0x638;
-	can_send(CAN_BUS_0, mob_tx_voltage);
-}
-
-void ecu_can_send_rpm(float rpm) {
-	Union32 rpmBigEndian;
-	Union32 rpmlittleEndian;
-	rpmBigEndian.f = rpm;
-	rpmlittleEndian.u32 = endianSwapperU32(rpmBigEndian.u32);
-	
-	mob_tx_rpm.can_msg->data.u32[0]  = rpmlittleEndian.u32;
-	mob_tx_rpm.can_msg->id = 0x63A;
-	mob_tx_rpm.dlc = 4;
-	can_send(CAN_BUS_0, mob_tx_rpm);
-}

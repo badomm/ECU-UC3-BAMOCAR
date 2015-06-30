@@ -12,6 +12,7 @@
 #include "INVERTER_defines.h"
 #include "queue_handles.h"
 #include "ecu_can.h"
+#include "ecu_can_mob.h"
 #include "fsm_ecu.h"
 #include "mcp2515.h"
 #include <stdbool.h>
@@ -70,11 +71,9 @@ int main(void){
  	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
 	xTaskCreate(task_watchdog, (signed portCHAR *) "Watchdog", configMINIMAL_STACK_SIZE, NULL, TASK_WATCHDOG_PRIORITY, NULL);
 		
-	#ifdef USE_WDT
-		wdt_scheduler();
-	#else
-		fsm_ecu_init(&ecu_data);
-	#endif
+
+	fsm_ecu_init(&ecu_data);
+
 	vTaskStartScheduler();
 }
 
@@ -94,7 +93,7 @@ static portTASK_FUNCTION(task_watchdog, pvParameters) {
 		for (task = 0; task < NUMBER_OF_TASKS-1; task++) {
 			if (task_check_alive[task] == pdFALSE) {
 				seppuku++;
-				gpio_set_pin_high(LED1);	
+				gpio_set_pin_low(LED1);	
 			}
 			/* Task has well-behaved. Reset flag and wait for next round. */
 			task_check_alive[task] = pdFALSE;
@@ -115,7 +114,7 @@ static portTASK_FUNCTION(task_watchdog, pvParameters) {
 			}
 		}
 		portEXIT_CRITICAL();
-		gpio_toggle_pin(LED2);
+		gpio_toggle_pin(LED4);
 	}
 }
 
@@ -134,7 +133,7 @@ static portTASK_FUNCTION( task_main, pvParameters ) {
 		data_timer++;
 		*pxTaskHasExecuted = pdTRUE;
 		portEXIT_CRITICAL();	
-		gpio_toggle_pin(LED4);
+		//gpio_toggle_pin(LED4);
 	}
 }
 	
@@ -197,7 +196,7 @@ static portTASK_FUNCTION(task_spi_can, pvParameters) {
 				messageSent = true;
 			}
 		}
-		gpio_toggle_pin(LED3);
+		//gpio_toggle_pin(LED3);
 		portENTER_CRITICAL();
 		*pxTaskHasExecuted = pdTRUE;
 		portEXIT_CRITICAL();
@@ -226,17 +225,21 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_10_HZ) == 0) {
 		ecu_can_inverter_read_reg(VDC_REG);
 		ecu_can_inverter_read_reg(RPM_REG);
-		ecu_can_send_voltage((float) ecu_data->inverter_vdc);
-		ecu_can_send_rpm( (float) ecu_data->rpm);
+		//ecu_can_send_voltage((float) ecu_data->inverter_vdc);
+		//ecu_can_send_rpm( (float) ecu_data->rpm);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
-			ecu_can_send_alive();
+			//Alive message
+			U8 alive_msg = ALIVE_INVERTER;
+			can_send(CAN_BUS_0, &mob_tx_dash, CANR_FCN_DATA_ID | CANR_GRP_DASH_ID | CANR_MODULE_ID7_ID, 1,  &alive_msg);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
 		ecu_can_inverter_read_reg(MOTOR_TEMP_REG);
 		ecu_can_inverter_read_reg(IGBT_TEMP_REG);
+		
+		
 		save_state(&mcp2515_spiModule, ecu_data);
 		data_timer = 0;
 		asm("nop");

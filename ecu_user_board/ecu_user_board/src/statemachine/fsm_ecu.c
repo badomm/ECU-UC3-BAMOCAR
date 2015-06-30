@@ -43,15 +43,30 @@ void fsm_ecu_init(fsm_ecu_data_t *ecu_data) {
 	ecu_data->bms_current = 0;
 }
 
+void setLED(bool a, bool b, bool c, bool d){
+	if(a)gpio_set_pin_low(LED1); 
+	else gpio_set_pin_high(LED1);
+	
+	if(b)gpio_set_pin_low(LED2);
+	else gpio_set_pin_high(LED2);
+	
+	if(c)gpio_set_pin_low(LED3);
+	else gpio_set_pin_high(LED3);
+	
+	if(d)gpio_set_pin_low(LED4);
+	else gpio_set_pin_high(LED4);
+}
+
 fsm_ecu_state_t fsm_ecu_run_state( fsm_ecu_state_t current_state, fsm_ecu_data_t *data) {
 	get_new_data(data);
+
 	fsm_ecu_state_t newState;
 	switch(current_state){
-		case STATE_STARTUP: newState = fsm_ecu_state_startup_func( data ); break;
-		case STATE_CHARGED: newState = fsm_ecu_state_charged_func( data); break;
-		case STATE_ENABLE_DRIVE: newState = fsm_ecu_state_enable_drive_func( data ); break;
-		case STATE_READY: newState = fsm_ecu_state_ready_func(data); break;
-		case STATE_ERROR: newState = fsm_ecu_state_error_func(data); break;
+		case STATE_STARTUP: newState = fsm_ecu_state_startup_func( data ); setLED(1,0,0,0); break;
+		case STATE_CHARGED: newState = fsm_ecu_state_charged_func( data); setLED(0,1,0,0); break;
+		case STATE_ENABLE_DRIVE: newState = fsm_ecu_state_enable_drive_func( data ); setLED(1,1,0,0); break;
+		case STATE_READY: newState = fsm_ecu_state_ready_func(data); setLED(0,0,1,0); break;
+		case STATE_ERROR: newState = fsm_ecu_state_error_func(data); setLED(1,0,1,0); break;
 		default: newState = STATE_ERROR;
 	}
 	return newState;

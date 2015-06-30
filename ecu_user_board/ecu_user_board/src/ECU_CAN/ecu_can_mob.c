@@ -63,8 +63,6 @@ can_mob_t mob_tx_rpm = {
 	CAN_STATUS_NOT_COMPLETED,
 };
 
-
-
 can_msg_t msg_rx_ecu = {
 	{
 		{

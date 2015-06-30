@@ -44,15 +44,10 @@ int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
 	return 1;
 }
 
-
-
 uint8_t check_inverter_error(fsm_ecu_data_t *ecu_data) {
 	uint16_t temp = ecu_data->inverter_error;
 	return (uint8_t)(temp & 1 << PWR_FAULT) | (temp & 1 << RFE_FAULT) | (temp & 1 << RESOLVER_FAULT);
 }
-
-
-
 
 uint16_t convert_num_to_vdc(uint32_t num) {
 	/* num = 33.2*vdc - 827 */

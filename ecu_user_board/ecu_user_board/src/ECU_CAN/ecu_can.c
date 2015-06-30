@@ -119,3 +119,14 @@ void can_out_callback_channel1(U8 handle, U8 event){
 	}
 }
 
+bool can_send(U8 CAN, can_mob_t *mob, uint32_t id, U8 dlc, U8* data){
+	mob->dlc = dlc;
+	mob->can_msg->id = id;
+	for(int i = 0; i <dlc; i++){
+		mob->can_msg->data.u8[i] = data[i];
+	}
+	if(CAN_CMD_ACCEPTED == can_tx(CAN, mob->handle, mob->dlc, CAN_DATA_FRAME, mob->can_msg)){
+		return true;
+	}
+	return false;
+}

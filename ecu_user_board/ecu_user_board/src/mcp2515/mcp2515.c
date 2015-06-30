@@ -153,7 +153,7 @@ uint8_t mcp2515_readRegister ( struct spi_device * spi_dev, uint8_t reg_addr ){
 
 void mcp2515_sendCanMessage ( struct spi_device * spi_dev, uint8_t DLC, uint8_t * data, uint16_t address, uint8_t bufferNumber ){
 	
-	gpio_set_pin_low(LED2);
+	//gpio_set_pin_low(LED2);
 	uint8_t messageAddress;
 	uint8_t messageDLCAddress;
 	uint8_t dataAddress;
@@ -203,7 +203,7 @@ void mcp2515_sendCanMessage ( struct spi_device * spi_dev, uint8_t DLC, uint8_t 
 	// Request data transmission, priority set to low
 	uint8_t dataTransmissionSetting = MCP2515_CAN_MESSAGE_PRIORITY_HIGHEST_bm | MCP2515_CAN_TRANSMIT_REQUEST_bm;
 	mcp2515_writeRegister (spi_dev, controlRegisterAddress, dataTransmissionSetting );
-	gpio_set_pin_high(LED2);
+	//gpio_set_pin_high(LED2);
 	//done
 }
 
@@ -254,7 +254,7 @@ uint8_t mcp2515_identifyRecievedChannel ( struct spi_device * spi_dev ){	//funct
 }
 
 uint8_t mcp2515_getReceivedMessage ( struct spi_device * spi_dev, uint8_t bufferNum, uint8_t * data, uint8_t len ){
-	gpio_set_pin_low(LED1);
+	//gpio_set_pin_low(LED1);
 	uint8_t messageAddress;
 	uint8_t messageDLCAddress;
 	uint8_t receivedMessageInterrupt_bm;
@@ -291,7 +291,7 @@ uint8_t mcp2515_getReceivedMessage ( struct spi_device * spi_dev, uint8_t buffer
 	
 	//reset interrupt flag: (perhaps no longer needed due to the readRXbuffer function over - it should automatically reset the flag)
 	//mcp2515_bitModifyRegister(spi_dev, CANINTF, receivedMessageInterrupt_bm,0x00);
-	gpio_set_pin_high(LED1);
+	//gpio_set_pin_high(LED1);
 	return DLC;
 
 }

@@ -8,6 +8,11 @@
 
 #ifndef ECU_CAN_MESSAGES_H_
 #define ECU_CAN_MESSAGES_H_
+
+
+#define DLC_FLOAT 4
+#define DLC_INT 4
+#define DLC_U16 2
 ////////////////////////////
 // Inverter Messages
 ///////////////////////////
@@ -22,11 +27,5 @@ void ecu_can_inverter_read_torque_periodic(void);
 //Dash messages
 ////////////////////////////////
 
-void ecu_can_send_to_dash(uint16_t data);
-
-
-void ecu_can_send_alive();
-void ecu_can_send_voltage(float voltage);
-void ecu_can_send_rpm(float rpm);
 
 #endif /* ECU_CAN_MESSAGES_H_ */

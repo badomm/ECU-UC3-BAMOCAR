@@ -11,6 +11,7 @@
 
 #include "revolve_can_definitions.h"
 #include "ecu_can_messages.h"
+#include "can.h"
 
 #define CAN_BUS_0	0
 #define CAN_BUS_1	1
@@ -32,4 +33,5 @@ typedef struct car_can_msg{
 
 
 void ecu_can_init(void);
+bool can_send(U8 CAN, can_mob_t *mob, U32 id, U8 dlc, U8* data);
 #endif /* ECU_CAN_H_ */
