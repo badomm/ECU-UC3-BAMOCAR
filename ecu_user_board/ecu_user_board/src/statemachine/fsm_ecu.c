@@ -72,7 +72,7 @@ fsm_ecu_state_t fsm_ecu_run_state( fsm_ecu_state_t current_state, fsm_ecu_data_t
 	return newState;
 }
 
-enum startup_states{STARTUP_CHECK_INVERTER_VOLTAGE, STARTUP_PRECHARGING, STARTUP_ERROR_CHECK, STARTUP_LAST_ERROR_CHECK };
+enum startup_states{STARTUP_CHECK_INVERTER_VOLTAGE, STARTUP_PRECHARGING, STARTUP_REQUEST_INVERTER_ERROR, STARTUP_CHECK_INVERTER_ERRROR };
 fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 	fsm_ecu_state_t next_state = STATE_STARTUP;
 	static enum startup_states internal_state = STARTUP_CHECK_INVERTER_VOLTAGE;
@@ -96,13 +96,13 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 						ecu_dio_inverter_clear_error();
 						ecu_data->inverter_error = 0xDEAD;
 						ecu_can_inverter_read_reg(ERROR_REG);
-						internal_state = STARTUP_ERROR_CHECK;
+						internal_state = STARTUP_REQUEST_INVERTER_ERROR;
 					}
 		break;
 			
-		case STARTUP_ERROR_CHECK:
+		case STARTUP_REQUEST_INVERTER_ERROR:
 					if (ecu_data->inverter_error != 0xDEAD) {
-						internal_state = STARTUP_LAST_ERROR_CHECK;
+						internal_state = STARTUP_CHECK_INVERTER_ERRROR;
 						attempts = 0;
 					} else {
 						ecu_can_inverter_read_reg(ERROR_REG);
@@ -110,7 +110,7 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 					}
 		break;
 			
-		case STARTUP_LAST_ERROR_CHECK:
+		case STARTUP_CHECK_INVERTER_ERRROR:
 					if( !check_inverter_error(ecu_data)) {
 						attempts = 0; //Reset
 						internal_state = STARTUP_CHECK_INVERTER_VOLTAGE; //Reset
@@ -127,7 +127,7 @@ fsm_ecu_state_t fsm_ecu_state_startup_func( fsm_ecu_data_t *ecu_data ) {
 	
 	
 	
-	if (attempts == ATTEMPT_LIMIT) {
+	if (attempts > ATTEMPT_LIMIT) {
 		switch (internal_state) {
 			case 0:
 				ecu_data->ecu_error |= (1 << ERR_BMS_COM);
