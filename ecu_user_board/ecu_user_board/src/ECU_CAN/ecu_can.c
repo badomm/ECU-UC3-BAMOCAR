@@ -189,7 +189,7 @@ static void task_can_send(U8 CAN, can_mob_t *mob){
 		if(CAN_BUS_0 == CAN){  
 			gotMessage = xQueueReceive(queueCanSend_0, &message, portMAX_DELAY);
 		}
-		else if(CAN_BUS_0 == CAN){
+		else if(CAN_BUS_1 == CAN){
 			gotMessage = xQueueReceive(queueCanSend_1, &message, portMAX_DELAY);
 		}
 		

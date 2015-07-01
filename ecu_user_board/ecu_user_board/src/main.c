@@ -161,9 +161,9 @@ static portTASK_FUNCTION(task_spi_can, pvParameters) {
 			
 			bool messageReceivedOnBuffer0 = canintfRegister & ( 1 << RX0IF);	// determine where messages have come from
 			bool messageReceivedOnBuffer1 = canintfRegister & ( 1 << RX1IF);
-			
+			gpio_toggle_pin(LED4);
 			if ( messageReceivedOnBuffer0){
-				//gpio_toggle_pin(LED3);
+				
 				inverter_can_msg.data.u64 = 0x00L;
 				inverter_can_msg.dlc = mcp2515_getReceivedMessage(&mcp2515_spiModule,0,inverter_can_msg.data.u8,6);
 				xQueueSendToBack( queue_from_inverter, &inverter_can_msg, 0 );
@@ -246,13 +246,13 @@ uint16_t get_and_send_periodic_data(fsm_ecu_data_t *ecu_data, uint16_t data_time
 	if ((data_timer % TIMER_1_HZ) == 0) {
 			//Alive message
 			U8 alive_msg = ALIVE_INVERTER;
-			ecu_can_send(CAN_BUS_0, CAN_DASH_ALIVE_ID, 1,  &alive_msg, 0);
+			ecu_can_send(CAN_BUS_1, CAN_DASH_ALIVE_ID, 1,  &alive_msg, 0);
 			//State
 			Union64 stateData;
 			stateData.u16[0] = (U16) ecu_data->state;
 			stateData.u16[1] = ecu_data->ecu_error;
 			stateData.u16[2] = ecu_data->inverter_error;
-			ecu_can_send(CAN_BUS_0, CAN_ID_INVERTER_STATE, 6,  stateData.u8, 0);
+			ecu_can_send(CAN_BUS_1, CAN_ID_INVERTER_STATE, 6,  stateData.u8, 0);
 	}
 	
 	if ((data_timer % TIMER_1_HZ) == 0) {
