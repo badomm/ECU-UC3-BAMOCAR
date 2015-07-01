@@ -100,11 +100,11 @@ void handle_inverter_data(fsm_ecu_data_t *ecu_data, inverter_can_msg_t inverter_
 		case VDC_REG:
 			/* 16 bit value */
 			temp = convert_num_to_vdc(inverter_can_msg.data.u32[0]);
-			if (temp < 30) {
-				ecu_data->inverter_vdc = 0;	
-			} else {
+			//if (temp < 30) {
+			//	ecu_data->inverter_vdc = 0;	
+			//} else {
 				ecu_data->inverter_vdc = temp;
-			}	 
+			//}	 
 			break;
 		case RPM_REG:
 			ecu_data->rpm = (MAX_RPM * convert_to_big_endian(inverter_can_msg.data.u32[0])) / 32767;
