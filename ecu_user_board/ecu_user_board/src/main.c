@@ -64,15 +64,16 @@ int main(void){
 	spi_init_pins();
 	mcp2515_spiModule = spi_init_module();
 	queue_from_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN, sizeof(inverter_can_msg_t));
-	queue_to_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN+5, sizeof(inverter_can_msg_t));
+	queue_to_inverter	= xQueueCreate(QUEUE_INVERTER_RX_LEN+10, sizeof(inverter_can_msg_t));
 	queue_dash_msg		= xQueueCreate(QUEUE_DASH_MSG_LEN, sizeof(car_can_msg_t));	
 	queue_bms_rx		= xQueueCreate(QUEUE_BMS_RX_LEN, sizeof(car_can_msg_t));
 	queue_ecu_rx		= xQueueCreate(1, sizeof(car_can_msg_t));
-	torque_request_ecu  = xQueueCreate(1, sizeof(float));
+	queue_torque_request_ecu  = xQueueCreate(1, sizeof(float));
+	queue_wheelSpeed	= xQueueCreate(10, sizeof(car_can_msg_t));
 	xTaskCreate(task_main, (signed portCHAR *) "Main ECU", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[0], TASK_MAIN_PRIORITY, (xTaskHandle *) &task_handles[0]);
 	xTaskCreate(taskCan0Send, (signed portCHAR *) "CAN0 SEND", configMINIMAL_STACK_SIZE + 300, (void *) NULL, TASK_CAN_PRIORITY, NULL);
 	xTaskCreate(taskCan1Send, (signed portCHAR *) "CAN1 SEND", configMINIMAL_STACK_SIZE + 300, (void *) NULL, TASK_CAN_PRIORITY, NULL);
- 	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE, (void *) &task_check_alive[1], TASK_SPI_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
+ 	xTaskCreate(task_spi_can, (signed portCHAR *) "CAN3 SPI", configMINIMAL_STACK_SIZE + 300, (void *) &task_check_alive[1], TASK_CAN_PRIORITY, (xTaskHandle *) &task_handles[1]);
 	xTaskCreate(task_watchdog, (signed portCHAR *) "Watchdog", configMINIMAL_STACK_SIZE, NULL, TASK_WATCHDOG_PRIORITY, NULL);
 		
 
@@ -118,7 +119,7 @@ static portTASK_FUNCTION(task_watchdog, pvParameters) {
 			}
 		}
 		portEXIT_CRITICAL();
-		gpio_toggle_pin(LED4);
+		//gpio_toggle_pin(LED4);
 	}
 }
 
@@ -148,7 +149,11 @@ static portTASK_FUNCTION(task_spi_can, pvParameters) {
 	mcp2515_init (&mcp2515_spiModule);
 	
 	while(1) {
+		//gpio_toggle_pin(LED4);
 		vTaskDelayUntil(&first_run, TASK_SPI_CAN_PERIOD);
+		//////////////
+		//Recieve Data From inverter
+		///////////
 		if (gpio_pin_is_low(INT1)) { // Data has been received. Start reception of data
 			
 			uint8_t canintfRegister;

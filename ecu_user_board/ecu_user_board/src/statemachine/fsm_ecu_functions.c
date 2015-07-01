@@ -13,22 +13,23 @@
 #include "queue_handles.h"
 #include "fsm_ecu.h"
 #include "fsm_ecu_functions.h"
-
+#include "ecu_can_definitions.h"
+#include "endianSwapper.h"
+#include <math.h>
 
 #define BMS_PRECHARGE_BIT			3
 #define MAX_KERS					(int16_t)-3277
+#define ECU_MAX_TORQUE			500.0f 
+#define TRQ_TIMEOUT  5
 
-#define TRQ_TIMEOUT  5;
-static int torqueRequestTimeout;
 
 
 
 int16_t calc_kers(fsm_ecu_data_t *ecu_data) {
-	float speed = 0;//ecu_data->WRR_sens & 0xFF; //
-	speed = speed*2.574;
+	float speed = (ecu_data->wheelSpeed_fl + ecu_data->wheelSpeed_fr)*0.5;
 	static bool allow_kers = false;
 	
-	if (speed > 10) {
+	if (speed > 10.0) {
 		allow_kers = true;
 	}
 	
@@ -122,25 +123,52 @@ void get_new_data(fsm_ecu_data_t *ecu_data) {
 	float torqueRequest;
 	car_can_msg_t can_msg;
 	inverter_can_msg_t inverter_can_msg;
+	static int torqueRequestTimeout;
 	
 	//Take care of Inverter Data
 	while(xQueueReceive( queue_from_inverter, &inverter_can_msg, 0 ) == pdTRUE) {
+		ecu_can_send(CAN_BUS_1, CAN_ID_INVERTER_INVERTER,inverter_can_msg.dlc, inverter_can_msg.data.u8,0);
 		handle_inverter_data(ecu_data, inverter_can_msg);
 	}
 	
 	//Handle TorqueRequest, if timeout, set request = 0
-	if(xQueueReceive( torque_request_ecu, &torqueRequest, 0 ) == pdTRUE) {
-		ecu_data->trq_request = torqueRequest;
+	if(xQueueReceive( queue_torque_request_ecu, &torqueRequest, 0 ) == pdTRUE) {
+		ecu_data->trq_request = (torqueRequest/ECU_MAX_TORQUE);
 		torqueRequestTimeout = TRQ_TIMEOUT;
 	}else{
 		if(!torqueRequestTimeout--){
 			ecu_data->trq_request = 0;
+			torqueRequestTimeout = -1;
 		}
 	}
 	
+	//Handle BMS rx
+	while(xQueueReceive(queue_bms_rx, &can_msg, 0 ) == pdTRUE) {
+		if(0x62B == can_msg.id ){
+			//Get max temp
+			uint16_t tempData = endianSwapperU16(can_msg.data.u16[0]);
+			float x = (float) tempData;
+			float temp = -7.175*0.000000000001 * (x*x*x) + 3.67*0.0000001 * (x*x) - 9.898 *0.001 *(x) + 124.831;
+			ecu_data->max_cell_temp = (uint8_t) temp;
+		}
+	}
+	
+	//Drive Enable Check
 	while(xQueueReceive(queue_ecu_rx, &can_msg, 0 ) == pdTRUE) {
 		if(0x230 == can_msg.id ){
 				ecu_data->drive_enable = (can_msg.data.u8[0] == 0x2);
+		}
+	}
+	//WheelSpeed
+	while(xQueueReceive(queue_wheelSpeed, &can_msg, 0 ) == pdTRUE) {
+		if(0x620 == can_msg.id){
+			ecu_data->wheelSpeed_fr = (((float)can_msg.data.u16[0])/100.0);
+		}else if (0x621 == can_msg.id){
+			ecu_data->wheelSpeed_fl = (((float)can_msg.data.u16[0])/100.0);
+		}else if (0x622 == can_msg.id){
+			ecu_data->wheelSpeed_bl = (((float)can_msg.data.u16[0])/100.0);
+		}else if (0x623 == can_msg.id){
+			ecu_data->wheelSpeed_br = (((float)can_msg.data.u16[0])/100.0);
 		}
 	}
 }

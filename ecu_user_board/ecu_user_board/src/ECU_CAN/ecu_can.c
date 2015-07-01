@@ -78,13 +78,13 @@ void ecu_can_init(void) {
 	INTC_init_interrupts();
 	
 	/* Allocate channel message box */
+	
 	mob_tx_can0.handle = 5;
 	mob_tx_can1.handle = 6;
-	mob_tx_dash.handle = 1;
 	mob_rx_ecu.handle = 2;
-	mob_tx_voltage.handle = 3;
-	mob_tx_rpm.handle = 4;
 	mob_torque_request_ecu.handle = 7;
+	mob_rxWheelSpeed.handle = 0;
+	mob_rx_bmsTemp.handle = 1;
 
 
 	/* Initialize CAN channels */
@@ -95,6 +95,8 @@ void ecu_can_init(void) {
 	/* Prepare for message reception */
 	setupRxmailbox(CAN_BUS_1, mob_torque_request_ecu);
 	setupRxmailbox(CAN_BUS_1, mob_rx_ecu);
+	setupRxmailbox(CAN_BUS_0, mob_rxWheelSpeed);
+	setupRxmailbox(CAN_BUS_0, mob_rx_bmsTemp);
 	
 	/* Prepeare Can send queue*/
 	queueCanSend_0 = xQueueCreate(20, sizeof(car_can_msg_t));
@@ -105,9 +107,23 @@ void ecu_can_init(void) {
 void can_out_callback_channel0(U8 handle, U8 event){
 	
 	can_mob_t *can_mob = NULL;
-	car_can_msg_t can_msg = {.data.u64 = can_get_mob_data(CAN_BUS_0, handle).u64,
-							 .id = can_get_mob_id(CAN_BUS_0, handle)
+	car_can_msg_t can_msg = {
+							 .data.u64 = can_get_mob_data(CAN_BUS_0, handle).u64,
+							 .id = can_get_mob_id(CAN_BUS_0, handle),
+							 .dlc = can_get_mob_dlc(CAN_BUS_0, handle)
 							};
+	/**Handle message****/
+	
+	//wheelspeed
+	if (handle == mob_rxWheelSpeed.handle) {
+		can_mob = &mob_rxWheelSpeed;
+		xQueueSendFromISR(queue_wheelSpeed, &can_msg, NULL );
+	}
+	//BMS temp
+	if (handle == mob_rx_bmsTemp.handle) {
+		can_mob = &mob_rx_bmsTemp;
+		xQueueOverwriteFromISR(queue_bms_rx, &can_msg, NULL );
+	}
 	
 	/*Reset mailbox and prepeare for reception*/
 	if(can_mob != NULL){
@@ -119,8 +135,10 @@ void can_out_callback_channel0(U8 handle, U8 event){
 /* Call Back called by can_drv, channel 1 */
 void can_out_callback_channel1(U8 handle, U8 event){
 	can_mob_t *can_mob = NULL;
-	car_can_msg_t can_msg = {.data.u64 = can_get_mob_data(CAN_BUS_1, handle).u64,
-							 .id = can_get_mob_id(CAN_BUS_1, handle)
+	car_can_msg_t can_msg = {
+							 .data.u64 = can_get_mob_data(CAN_BUS_1, handle).u64,
+							 .id = can_get_mob_id(CAN_BUS_1, handle),
+							 .dlc = can_get_mob_dlc(CAN_BUS_1, handle)
 							};
 	/*Check which handle the message is*/
 
@@ -128,13 +146,13 @@ void can_out_callback_channel1(U8 handle, U8 event){
 	if (handle == mob_torque_request_ecu.handle) {
 		can_mob = &mob_torque_request_ecu;
 		Union32 swappedData;
-		swappedData.u32 = endianSwapperU32(mob_torque_request_ecu.can_msg->data.u32[0]);
-		xQueueOverwriteFromISR(torque_request_ecu, &swappedData.f, NULL );
+		swappedData.u32 = endianSwapperU32(can_msg.data.u32[0]);
+		xQueueOverwriteFromISR(queue_torque_request_ecu, &swappedData.f, NULL );
 	}
 	//ECU: drive enable and disable
 	else if (handle == mob_rx_ecu.handle) {
 		can_mob = &mob_rx_ecu;
-		xQueueOverwriteFromISR(queue_ecu_rx, &mob_rx_ecu.can_msg, NULL );
+		xQueueOverwriteFromISR(queue_ecu_rx, &can_msg, NULL );
 	}
 	
 	/*Reset mailbox and prepare for reception*/

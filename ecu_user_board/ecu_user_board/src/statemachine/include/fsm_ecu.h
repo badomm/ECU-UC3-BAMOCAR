@@ -30,7 +30,7 @@
 
 
 typedef enum fsm_ecu_state{
-	STATE_STARTUP,
+	STATE_STARTUP = 0,
 	STATE_CHARGED,
 	STATE_ENABLE_DRIVE,
 	STATE_READY,
@@ -60,6 +60,10 @@ typedef struct fsm_ecu_data{
 	uint8_t config_max_trq;
 	int16_t kers_factor;
 	int16_t bms_current;
+	float wheelSpeed_fl;
+	float wheelSpeed_fr;
+	float wheelSpeed_bl;
+	float wheelSpeed_br;
 }fsm_ecu_data_t;
 
 void fsm_ecu_init(fsm_ecu_data_t *data);
